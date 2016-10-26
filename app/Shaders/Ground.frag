@@ -11,7 +11,7 @@ uniform float modifier;
 const vec3 sand = vec3(.79, .70, .58);
 const vec3 grass = vec3(.16, .32, .16);
 const vec3 dirt = vec3(.32, .32, .16);
-const vec3 stone = vec3(.64, .64, .64);
+const vec3 stone = vec3(.64, .64, .48);
 const vec3 snow = vec3(.96, .96, .96);
 
 void main(void) {
