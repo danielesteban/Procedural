@@ -13,7 +13,7 @@ class Camera {
 		this.tilt = glMatrix.toRadian(270);
 		this.pitch = glMatrix.toRadian(-15);
 		this.projection = mat4.create();
-		this.position = vec3.fromValues(Math.floor(Math.random() * 1024) - 1024, 64, Math.floor(Math.random() * 1024) - 1024);
+		this.position = vec3.fromValues(Math.floor(Math.random() * 1024) - 1024, this.height * 0.5 + this.cameraOffset, Math.floor(Math.random() * 1024) - 1024);
 		this.front = vec3.create();
 		this.right = vec3.create();
 		this.up = vec3.create();
@@ -106,7 +106,7 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.up ? 16 : 8;
+		const speed = Input.flight ? 32 : 8;
 		const step = speed * delta;
 
 		//debug!
@@ -116,14 +116,13 @@ class Camera {
 			// Input.backward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, -step);
 			// Input.left && vec3.scaleAndAdd(this.position, this.position, this.worldRight, -step);
 			// Input.right && vec3.scaleAndAdd(this.position, this.position, this.worldRight, step);
-			// Input.up && vec3.scaleAndAdd(this.position, this.position, this.worldUp, step);
-			// Input.down && vec3.scaleAndAdd(this.position, this.position, this.worldUp, -step);
 			updatePos = true;
 		}
 
 		if(updatePos) {
-			const floorDiff = (this.getFloorY() || this.position[1]) - this.position[1];
-			this.position[1] += Math.max(floorDiff, -step);
+			const floorY = this.getFloorY();
+			const floorDiff = Math.max(floorY + (Input.flight ? 10 : 0), Input.flight ? 30 : 0) - this.position[1];
+			this.position[1] += Math.min(Math.max(floorDiff, step * -0.5), floorY > this.position[1] + step ? floorDiff : step * 0.5);
 		}
 
 		if(this.VRDisplay) {
@@ -181,7 +180,7 @@ class Camera {
 			0, 200 * (ceiling ? 1 : -1), 0,									// to
 			Mesh.collisionFloor
 		);
-		if(!ray) return (!ceiling ? this.getFloorY(true) : 0);
+		if(!ray) return (!ceiling ? this.getFloorY(true) : this.position[1]);
 		const floorY = ray.get_m_hitPointWorld().y() + this.height * 0.5 + this.cameraOffset;
 		Ammo.destroy(ray);
 		return floorY;

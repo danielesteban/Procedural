@@ -13,8 +13,7 @@ export const State = {
 	backward: 0,
 	left: 0,
 	right: 0,
-	up: 0,
-	down: 0,
+	flight: 0,
 	screenshot: 0
 };
 const resetState = () => {
@@ -134,11 +133,7 @@ const onKey = (e) => {
 		break;
 		case 32:
 			e.preventDefault();
-			State.up = state;
-		break;
-		case 16:
-			e.preventDefault();
-			State.down = state;
+			State.flight = state;
 		break;
 		case 80:
 			State.screenshot = state ? {} : false;
