@@ -67,27 +67,57 @@ class Level {
 	}
 	render() {
 		let rendered = 0;
-		const camera = {
-			transform: this.camera.transform,
-			position: this.camera.position,
-			direction: this.camera.front,
-			translation: this.camera.position
-		};
 
-		/* Render all the meshes */
-		const postLayer = [];
-		this.layers.forEach((layer) => layer.forEach((mesh, i) => {
-			const post = mesh.render(camera);
-			post && postLayer.push(post);
-			rendered++;
-		}));
-
-		/* Render the post layer */
-		for(let j=0; j<2; j++) {
-			postLayer.forEach((mesh) => (
-				((j === 0 && !mesh.blending) || (j === 1 && mesh.blending)) && mesh.render(camera)
-			));
+		const cameras = [];
+		const VR = this.camera.VRDisplay;
+		if(VR) {
+			const eyePosition = vec3.create();
+			for(let eye=0; eye<2; eye++) {
+				cameras.push({
+					transform: this.camera.VRTransforms[eye],
+					position: this.camera.VRPositions[eye],
+					direction: this.camera.front,
+					translation: this.camera.VRPositions[eye],
+					viewport: {
+						x: eye === 0 ? 0 : GL.drawingBufferWidth * 0.5,
+						y: 0,
+						w: GL.drawingBufferWidth * 0.5,
+						h: GL.drawingBufferHeight
+					}
+				});
+			}
+		} else {
+			cameras.push({
+				transform: this.camera.transform,
+				position: this.camera.position,
+				direction: this.camera.front,
+				translation: this.camera.position,
+				viewport: {
+					x: 0,
+					y: 0,
+					w: GL.drawingBufferWidth,
+					h: GL.drawingBufferHeight
+				}
+			});
 		}
+
+		cameras.forEach((camera) => {
+			GL.viewport(camera.viewport.x, camera.viewport.y, camera.viewport.w, camera.viewport.h);
+			/* Render all the meshes */
+			const postLayer = [];
+			this.layers.forEach((layer) => layer.forEach((mesh, i) => {
+				const post = mesh.render(camera);
+				post && postLayer.push(post);
+				rendered++;
+			}));
+
+			/* Render the post layer */
+			for(let j=0; j<2; j++) {
+				postLayer.forEach((mesh) => (
+					((j === 0 && !mesh.blending) || (j === 1 && mesh.blending)) && mesh.render(camera)
+				));
+			}
+		});
 
 		/* Take screenshot (if requested) */
 		if(Input.screenshot) {

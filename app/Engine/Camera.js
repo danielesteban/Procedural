@@ -22,6 +22,32 @@ class Camera {
 		this.worldUp = vec3.fromValues(0, 1, 0);
 		this.transform = mat4.create();
 		this.view = mat4.create();
+
+		/* WebVR */
+		if(navigator.getVRDisplays) {
+			navigator.getVRDisplays().then((displays) => {
+				if(!displays.length) return;
+				this.VRDisplay = displays[0];
+				this.VRView = mat4.create();
+				this.VRProjections = [
+					mat4.perspectiveFromFieldOfView(mat4.create(), this.VRDisplay.leftEyeParameters.fieldOfView, this.VRDisplay.depthNear, this.VRDisplay.depthFar),
+					mat4.perspectiveFromFieldOfView(mat4.create(), this.VRDisplay.rightEyeParameters.fieldOfView, this.VRDisplay.depthNear, this.VRDisplay.depthFar)
+				];
+				this.VROffsets = [
+					this.VRDisplay.leftEyeParameters.offset,
+					this.VRDisplay.rightEyeParameters.offset
+				];
+				this.VRPositions = [
+					vec3.create(),
+					vec3.create()
+				];
+				this.VRTransforms = [
+					mat4.create(),
+					mat4.create()
+				];
+			});
+		}
+
 		this.onResize = this.onResize.bind(this);
 		window.addEventListener(ResizeEvent, this.onResize);
 		this.setAspect(GL.drawingBufferWidth / GL.drawingBufferHeight);
@@ -61,19 +87,30 @@ class Camera {
 		this.updateTransform();
 	}
 	updateTransform() {
-		const lookAt = vec3.add(vec3.create(), this.position, this.front);
-		mat4.lookAt(this.view, this.position, lookAt, this.worldUp);
-		mat4.multiply(this.transform, this.projection, this.view);
+		if(this.VRDisplay) {
+			const VRPosition = vec3.add(vec3.create(), this.position, this.VRDisplay.pose.position);
+			mat4.fromRotationTranslation(this.VRView, this.VRDisplay.pose.orientation, VRPosition);
+			for(let eye=0; eye<2; eye++) {
+				mat4.translate(this.VRTransforms[eye], this.VRView, this.VROffsets[eye]);
+				mat4.invert(this.VRTransforms[eye], this.VRTransforms[eye]);
+				mat4.multiply(this.VRTransforms[eye], this.VRProjections[eye], this.VRTransforms[eye]);
+				vec3.add(this.VRPositions[eye], VRPosition, this.VROffsets[eye]);
+			}
+		} else {
+			const lookAt = vec3.add(vec3.create(), this.position, this.front);
+			mat4.lookAt(this.view, this.position, lookAt, this.worldUp);
+			mat4.multiply(this.transform, this.projection, this.view);
+		}
 		Debug && Debug.updatePosition([this.position[0], this.position[1] - this.cameraOffset - this.height * 0.5, this.position[2]]);
 	}
 	processInput(delta) {
-		//debug!
-		Input.forward = true;
-
 		/* Movement */
 		let updatePos = false;
 		const speed = Input.up ? 16 : 8;
 		const step = speed * delta;
+
+		//debug!
+		Input.forward = true;
 		if(Input.forward || Input.backward || Input.left || Input.right || Input.up || Input.down) {
 			Input.forward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, step);
 			// Input.backward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, -step);
@@ -87,6 +124,14 @@ class Camera {
 		if(updatePos) {
 			const floorDiff = (this.getFloorY() || this.position[1]) - this.position[1];
 			this.position[1] += Math.max(floorDiff, -step);
+		}
+
+		if(this.VRDisplay) {
+			/* Hacky! */
+			const q = this.VRDisplay.pose.orientation;
+			this.tilt = -2 * Math.atan2(q[1], q[3]) - Math.PI * 0.5;
+			this.pitch = 0;
+			return this.updateVectors();
 		}
 
 		/* Mouse look */
