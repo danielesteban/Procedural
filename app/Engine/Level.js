@@ -66,11 +66,8 @@ class Level {
 		this.camera.processInput(delta);
 	}
 	render() {
-		let rendered = 0;
-
 		const cameras = [];
-		const VR = this.camera.VRDisplay;
-		if(VR) {
+		if(this.camera.VRDisplay) {
 			const eyePosition = vec3.create();
 			for(let eye=0; eye<2; eye++) {
 				cameras.push({
@@ -101,6 +98,7 @@ class Level {
 			});
 		}
 
+		let rendered = 0;
 		cameras.forEach((camera) => {
 			GL.viewport(camera.viewport.x, camera.viewport.y, camera.viewport.w, camera.viewport.h);
 			/* Render all the meshes */
