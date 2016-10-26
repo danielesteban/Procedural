@@ -85,8 +85,8 @@ class Camera {
 		}
 
 		if(updatePos) {
-			const floorDiff = (this.getFloorY() || 128) - this.position[1];
-			this.position[1] += Math.min(Math.max(floorDiff, -step), step)
+			const floorDiff = (this.getFloorY() || this.position[1]) - this.position[1];
+			this.position[1] += Math.max(floorDiff, -step);
 		}
 
 		/* Mouse look */
@@ -129,14 +129,14 @@ class Camera {
 		Ammo.destroy(from);
 		return result;
 	}
-	getFloorY() {
+	getFloorY(ceiling) {
 		/* Get the closest floor plane at camera position */
 		const ray = this.rayTest(
 			0, this.height * 0.25 - this.cameraOffset, 0,		// from
-			0, -200, 0,																			// to
-			Mesh.collisionFloor | Mesh.collisionElevator
+			0, 200 * (ceiling ? 1 : -1), 0,									// to
+			Mesh.collisionFloor
 		);
-		if(!ray) return 0;
+		if(!ray) return (!ceiling ? this.getFloorY(true) : 0);
 		const floorY = ray.get_m_hitPointWorld().y() + this.height * 0.5 + this.cameraOffset;
 		Ammo.destroy(ray);
 		return floorY;

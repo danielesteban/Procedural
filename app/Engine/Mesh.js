@@ -7,11 +7,7 @@ class Mesh {
 	static collisionStatic = 1 << 0;
 	static collisionDynamic = 1 << 1;
 	static collisionFloor = 1 << 2;
-	static collisionElevator = 1 << 3;
-	static collisionButton = 1 << 4;
-	static collisionEntity = 1 << 5;
-	static collisionVoxel = 1 << 6;
-	static collisionAll = Mesh.collisionStatic | Mesh.collisionDynamic | Mesh.collisionFloor | Mesh.collisionElevator | Mesh.collisionButton | Mesh.collisionEntity | Mesh.collisionVoxel;
+	static collisionAll = Mesh.collisionStatic | Mesh.collisionDynamic | Mesh.collisionFloor;
 
 	/* Easing functions */
 	static easeLinear = (t, c) => (c * t);
