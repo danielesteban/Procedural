@@ -55,7 +55,7 @@ class Main extends Level {
 		/* Day/Night cycle config */
 		SkyboxShader.sunPosition = vec3.create();
 		GroundShader.sunPosition = vec3.create();
-		this.timeStep = 0.001;
+		this.timeStep = 0.01;
 		const fullCycle = (1 / (this.timeStep / 60)) * (1000 / 60);
 		this.sunLight = (((new Date()) * 1) % fullCycle) / fullCycle;
 	}

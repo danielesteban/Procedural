@@ -106,10 +106,10 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.flight ? 32 : 8;
+		const speed = Input.flight ? 32 : 6;
 		const step = speed * delta;
 
-		//debug!
+		/* Hackity-hack: always forward */
 		Input.forward = true;
 		if(Input.forward || Input.backward || Input.left || Input.right || Input.up || Input.down) {
 			Input.forward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, step);
@@ -122,7 +122,7 @@ class Camera {
 		if(updatePos) {
 			const floorY = this.getFloorY();
 			const floorDiff = Math.max(floorY + (Input.flight ? 10 : 0), Input.flight ? 30 : 0) - this.position[1];
-			this.position[1] += Math.min(Math.max(floorDiff, step * -0.5), floorY > this.position[1] + step ? floorDiff : step * 0.5);
+			this.position[1] += Math.min(Math.max(floorDiff, step * -0.5), floorY > this.position[1] + (Input.flight ? step * 4 : 0) ? floorDiff : step * 0.5);
 		}
 
 		if(this.VRDisplay) {
