@@ -74,7 +74,7 @@ class ImageTexture extends Texture {
 		image.onload = () => {
 			this.onLoad(image);
 		};
-		image.src = require('./' + id + '.jpg');
+		image.src = require('./' + id + '.png');
 	}
 }
 
@@ -93,7 +93,7 @@ class CubemapTexture extends Texture {
 				Loader();
 				if(--count === 0) this.onLoad(textures);
 			};
-			image.src = require('./' + id + '.jpg');
+			image.src = require('./' + id + '.png');
 			loading++;
 		});
 	}
@@ -168,11 +168,6 @@ class AtlasTexture extends Texture {
 	}
 }
 
-Loader = Loader();
+export const Grass = new ImageTexture('Grass');
 
-//DEBUG: no textures yet.. kick the loader
-Loader();
-window.setTimeout(() => {
-	onLoad.data = 'all';
-	window.dispatchEvent(onLoad);
-}, 0);
+Loader = Loader();
