@@ -38,7 +38,8 @@ class Main extends Level {
 		this.chunk = vec2.create();
 		this.chunks = chunks;
 		this.clouds = clouds;
-		this.queue = {};
+		this.queued = {};
+		this.queue = [];
 
 		const cloudsY = 256;
 		const cloudsRadius = 1800;
@@ -79,7 +80,7 @@ class Main extends Level {
 			Math.floor((this.camera.position[0] / GroundModel.scale + GroundModel.size * 0.5) / GroundModel.size),
 			Math.floor((this.camera.position[2] / GroundModel.scale + GroundModel.size * 0.5) / GroundModel.size)
 		);
-		if(vec2.exactEquals(this.chunk, currentChunk)) return;
+		if(vec2.exactEquals(this.chunk, currentChunk)) return this.processQueue();
 		this.chunk = currentChunk;
 
 		/* De-spawn far away chunks */
@@ -87,7 +88,7 @@ class Main extends Level {
 		let l = this.chunks.layer.length;
 		for(let i=0; i<l; i++) {
 			const mesh = this.chunks.layer[i];
-			if(vec2.distance(this.chunk, mesh.chunk) > this.renderRadius) {
+			if(vec2.distance(this.chunk, mesh.chunk) > this.renderRadius * 1.25) {
 				this.world.removeRigidBody(mesh.body);
 				mesh.destroy();
 				this.chunks.layer.splice(i, 1);
@@ -98,35 +99,32 @@ class Main extends Level {
 			}
 		}
 
-		/* Spawn new chunks */
-		const spawn = [];
+		/* Queue near chunks */
 		for(let z=this.chunk[1] - this.renderRadius; z<this.chunk[1] + this.renderRadius; z++)
 		for(let x=this.chunk[0] - this.renderRadius; x<this.chunk[0] + this.renderRadius; x++) {
 			const chunk = vec2.fromValues(x, z);
 			const chunkID = x + ':' + z;
-			const distance = vec2.distance(this.chunk, chunk);
-			if(this.chunks.test(chunkID) || this.queue[chunkID] || distance > this.renderRadius) continue;
-			spawn.push({chunk, distance});
-			this.queue[chunkID] = true;
+			if(this.chunks.test(chunkID) || this.queued[chunkID] || vec2.distance(this.chunk, chunk) > this.renderRadius) continue;
+			this.queued[chunkID] = true;
+			this.queue.push(chunk);
 		}
 
 		/* Sort queued chunks by proximity to the camera */
-		spawn.sort((a, b) => {
-			return a.distance - b.distance;
+		this.queue.sort((a, b) => {
+			return vec2.distance(this.chunk, a) - vec2.distance(this.chunk, b);
 		});
 
-		const queuedSpawn = () => {
-			if(!spawn.length) return;
-			const {chunk} = spawn.shift();
-			const chunkID = chunk[0] + ':' + chunk[1];
-			delete this.queue[chunkID];
-			if(this.chunks.test(chunkID)) return;
-			const mesh = new Ground(this.noise, chunk);
-			this.chunks.push(mesh);
-			this.world.addRigidBody(mesh.body, mesh.collisionGroup, Mesh.collisionAll);
-			window.setTimeout(queuedSpawn, 0);
-		};
-		window.setTimeout(queuedSpawn, 0);
+		this.processQueue();
+	}
+	processQueue(iteration) {
+		if(!this.queue.length || iteration >= 2) return;
+		const chunk = this.queue.shift();
+		const chunkID = chunk[0] + ':' + chunk[1];
+		delete this.queued[chunkID];
+		const mesh = new Ground(this.noise, chunk);
+		this.chunks.push(mesh);
+		this.world.addRigidBody(mesh.body, mesh.collisionGroup, Mesh.collisionAll);
+		this.queue.length && this.processQueue((iteration || 0) + 1);
 	}
 };
 
