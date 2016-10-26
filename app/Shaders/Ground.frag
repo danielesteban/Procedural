@@ -15,7 +15,7 @@ const vec3 stone = vec3(.64, .64, .64);
 const vec3 snow = vec3(.96, .96, .96);
 
 void main(void) {
-	vec3 color = vec3(texture2D(texture, vec2(fragPosition.x * 0.375, fragPosition.z * 0.375)));
+	vec3 color = vec3(texture2D(texture, vec2(fragPosition.x * 0.5, fragPosition.z * 0.5)));
 	float step;
 	if(fragPosition.y < 3.0) {
 		step = fragPosition.y / 3.0;
