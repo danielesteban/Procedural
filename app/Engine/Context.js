@@ -203,4 +203,6 @@ export const Debug = localStorage.debug ? (() => {
 })() : null;
 
 /* Browser history */
-export const History = createHistory();
+export const History = createHistory({
+	basename: BASENAME
+});

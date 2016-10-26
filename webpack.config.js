@@ -12,6 +12,7 @@ const production = process.env.NODE_ENV === 'production';
 
 const bundle = function(app) {
 	const appPath = path.resolve(__dirname, app.source);
+	const publicPath = '/' + (production ? 'procedural/' : '');
 	return {
 	 name: app.name,
 	 entry: (app.modules || []).concat([
@@ -25,7 +26,7 @@ const bundle = function(app) {
 	 output: {
 		 path: buildPath,
 		 filename: (app.path || '') + (production ? '[hash].js' : 'bundle.js'),
-		 publicPath: '/' + (production ? 'procedural/' : '')
+		 publicPath: publicPath
 	 },
 	 devtool: production ? 'cheap-module-source-map' : 'eval',
 	 sassLoader: {
@@ -78,6 +79,7 @@ const bundle = function(app) {
 			 'process.env': {
 				 NODE_ENV: JSON.stringify(production ? "production" : "development")
 			 },
+			 BASENAME: publicPath.substr(1),
 			 VERSION: JSON.stringify('v0.' + Math.floor(commitCount / 10) + '.' + (commitCount % 10))
 		 }),
 		 new ExtractTextPlugin((app.path || '') + (production ? '[hash].css' : 'bundle.css'), {
