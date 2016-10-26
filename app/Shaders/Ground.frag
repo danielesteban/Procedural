@@ -41,5 +41,5 @@ void main(void) {
   vec3 reflectDirection = reflect(-direction, normal);
 	float specular = pow(max(dot(cameraDirection, reflectDirection), 0.0), 4.0);
 
-	gl_FragColor = vec4(color * (diffuse + specular) * max(0.1, modifier), 1.0);
+	gl_FragColor = vec4(color * (diffuse + specular) * modifier, 1.0);
 }
