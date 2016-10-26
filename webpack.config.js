@@ -7,8 +7,7 @@ const path = require('path');
 const buildPath = path.resolve(__dirname, 'build');
 const modulesPath = path.resolve(__dirname, 'node_modules');
 const childProcess = require('child_process');
-// const commitCount = parseInt(childProcess.execSync('git rev-list HEAD --count').toString(), 10);
-const commitCount = 0;
+const commitCount = parseInt(childProcess.execSync('git rev-list HEAD --count').toString(), 10);
 const production = process.env.NODE_ENV === 'production';
 
 const bundle = function(app) {
@@ -26,7 +25,7 @@ const bundle = function(app) {
 	 output: {
 		 path: buildPath,
 		 filename: (app.path || '') + (production ? '[hash].js' : 'bundle.js'),
-		 publicPath: '/'
+		 publicPath: '/' + (production ? 'procedural/' : '')
 	 },
 	 devtool: production ? 'cheap-module-source-map' : 'eval',
 	 sassLoader: {
