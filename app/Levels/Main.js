@@ -67,7 +67,7 @@ class Main extends Level {
 		this.sunLight > 1 && (this.sunLight %= 1);
 		const easedSunLight = Mesh.easeInOut(this.sunLight, 1);
 		const sunLight = (easedSunLight > 0.5 ? easedSunLight - 0.5 : 0.5 - easedSunLight) * 2;
-		CloudShader.modifier = Math.min(1, sunLight + 0.1);
+		CloudShader.modifier = GroundShader.modifier = Math.min(1, sunLight + 0.1);
 		this.stars.modifier = sunLight <= 0.25 ? (1 - sunLight * 4) : 0;
 		const sunPos = (easedSunLight > 0.5 ? easedSunLight - 0.5 : easedSunLight + 0.5) * 2 - 1;
 
