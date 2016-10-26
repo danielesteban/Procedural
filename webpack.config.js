@@ -79,7 +79,7 @@ const bundle = function(app) {
 			 'process.env': {
 				 NODE_ENV: JSON.stringify(production ? "production" : "development")
 			 },
-			 BASENAME: JSON.stringify(publicPath.substr(1)),
+			 BASENAME: JSON.stringify(publicPath),
 			 VERSION: JSON.stringify('v0.' + Math.floor(commitCount / 10) + '.' + (commitCount % 10))
 		 }),
 		 new ExtractTextPlugin((app.path || '') + (production ? '[hash].css' : 'bundle.css'), {
