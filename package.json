@@ -1,0 +1,51 @@
+{
+  "name": "Procedural",
+  "version": "1.0.0",
+  "author": "Daniel Esteban Nombela",
+  "main": "main.js",
+  "scripts": {
+    "bumpAmmoMemory": "replace 'Module = Module \\|\\| {};' 'Module = Module || {TOTAL_MEMORY: 196*1024*1024};' node_modules/ammo.js/ammo.js",
+    "clean": "rimraf build",
+    "start": "webpack-dev-server --progress --colors --inline --history-api-fallback",
+    "build": "cross-env NODE_ENV=production webpack --progress --colors",
+		"postinstall": "npm run bumpAmmoMemory && npm run clean && npm run build && npm run promote",
+		"promote": "rimraf production && mv build production"
+  },
+  "dependencies": {
+    "ammo.js": "0.0.10",
+    "autoprefixer": "^6.5.1",
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.17.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-stage-1": "^6.16.0",
+    "cross-env": "^3.1.3",
+    "css-loader": "^0.25.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "file-saver": "^1.3.3",
+    "fpsmeter": "git+https://github.com/darsain/fpsmeter.git",
+    "gl-matrix": "^2.3.2",
+    "history": "^4.3.0",
+    "html-webpack-plugin": "^2.22.0",
+    "imagemin-webpack-plugin": "^1.2.1",
+    "node-sass": "^3.10.1",
+    "noisejs": "^2.1.0",
+    "perfnow": "^0.2.0",
+    "postcss-loader": "^1.0.0",
+    "raf": "^3.3.0",
+    "raw-loader": "^0.5.1",
+    "replace": "^0.3.0",
+    "rimraf": "^2.5.4",
+    "sass-loader": "^4.0.2",
+    "style-loader": "^0.13.1",
+    "webfontloader": "^1.6.26",
+    "webpack": "^1.13.2"
+  },
+  "devDependencies": {
+  	"webpack-dev-server": "^1.16.2"
+  },
+  "engines": {
+    "node": "6.x"
+  }
+}

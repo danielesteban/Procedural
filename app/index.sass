@@ -1,0 +1,291 @@
+*, *:after, *:before
+	box-sizing: border-box
+
+=clearfix()
+	&:before, &:after
+		display: table
+		content: " "
+	&:after
+		clear: both
+
+html
+	font-family: Lato, Arial, sans-serif
+	font-weight: 100
+	font-size: 14px
+	line-height: 23px
+	vertical-align: baseline
+	font-smoothing: antialiased
+	text-size-adjust: 100%
+
+body
+	margin: 0
+	overflow: hidden
+	user-select: none
+
+label, button, input, select, textarea
+	font-family: inherit
+	font-weight: inherit
+	font-size: inherit
+	color: inherit
+
+input, select, textarea
+	border: 1px solid #bbb
+	resize: none
+
+canvas
+	display: block
+	width: 100%
+	height: 100%
+	cursor: pointer
+
+debug, settings, status, chat
+	display: block
+	position: fixed
+	color: #fafafa
+	text-shadow: 1px 1px #1a1a1a
+
+debug, settings, status
+	z-index: 1
+
+debug
+	top: 50px
+	right: 5px
+	text-align: right
+
+settings, status
+	padding: 5px
+	border-radius: 4px
+	background: rgba(0, 0, 0, .25)
+
+settings
+	bottom: 10px
+	right: 10px
+	label
+		display: block
+		width: 100px
+		input[type="checkbox"]
+			border: 0
+			margin-right: 10px
+	a.button
+		display: block
+		color: inherit
+		cursor: pointer
+		text-decoration: none
+		background: #448844
+		border-radius: 4px
+		text-align: center
+		margin-top: 3px
+		&.dark
+			background: #1a1a1a
+		&.first
+			margin-top: 6px
+
+status
+	top: 10px
+	left: 10px
+
+chat
+	top: 100%
+	width: 100%
+	height: 50%
+	padding: 10px
+	font-size: 18px
+	line-height: 29px
+	transition: top 0.15s ease-out
+	&.viewport, &.open
+		top: 50%
+	&.full
+		background: rgba(0, 0, 0, .5)
+		padding-right: 150px
+		padding-bottom: 30px
+		wrapper
+			display: block
+			height: 100%
+			overflow-y: auto
+		input[type="text"]
+			display: block
+			margin: 0
+			border: 0
+			outline: 0
+			width: 100%
+			padding: 4px 0
+			background: transparent
+		peers
+			position: absolute
+			display: block
+			padding: 5px 0
+			top: 0
+			right: 0
+			width: 150px
+			height: 100%
+			overflow-y: auto
+			background: rgba(0, 0, 0, .5)
+			peer
+				display: block
+				padding: 0 10px
+	entry
+		display: block
+
+overlay
+	display: block
+	position: absolute
+	top: 0
+	left: 0
+	right: 0
+	bottom: 0
+	background: rgba(0, 0, 0, 0)
+	transition: background 0.15s ease-out
+	overflow-y: auto
+	&.open
+		background: rgba(0, 0, 0, .3)
+
+dialog
+	display: block
+	border: 4px solid #1a1a1a
+	width: 440px
+	margin: 30px auto
+	background: #fafafa
+	padding: 10px
+	border-radius: 4px
+	font-size: 18px
+	line-height: 29px
+	opacity: 0
+	transform: translate(0, -50%)
+	transition: transform 0.15s ease-out, opacity 0.15s ease-out
+	overlay.open &
+		opacity: 1
+		transform: translate(0, 0)
+	&.wide
+		width: 640px
+	header
+		text-align: center
+		font-size: 32px
+		line-height: 52px
+		border-bottom: 1px solid #a1a1a1
+		margin-bottom: 10px
+	form
+		label, input, select, textarea
+			display: block
+			width: 100%
+		input, textarea
+			margin-bottom: 10px
+		textarea
+			height: 150px
+	button[type="submit"]
+		display: block
+		margin: 20px auto 10px
+		min-width: 150px
+		padding: 2px 12px 3px
+		text-align: center
+		font-size: 18px
+		line-height: 29px
+		background: #448844
+		color: #fafafa
+		border: 1px solid #1a1a1a
+		box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px
+		cursor: pointer
+	a
+		color: #365899
+		cursor: pointer
+		text-decoration: none
+	footer
+		text-align: right
+	actions
+		position: relative
+		display: block
+		> div
+			position: absolute
+			top: -65px
+			right: 20px
+			font-size: 32px
+			line-height: 52px
+			cursor: pointer
+	tabs
+		display: block
+		background: #999
+		margin: 0 -10px 10px
+		padding: 0 10px
+		> div
+			display: inline-block
+			padding: 5px 10px
+			width: 33.333333333333336%
+			cursor: pointer
+			&.active
+				background: #fafafa
+	worlds, beacons
+		display: block
+		height: 440px
+		overflow-y: auto
+		> div
+			padding: 10px
+			cursor: pointer
+			+clearfix()
+			&:nth-child(odd)
+				background: #fff
+			&:hover
+				background: #afafaf
+			img
+				float: left
+				width: 196px
+				height: 110px
+				vertical-align: middle
+				margin-right: 15px
+				background: #000
+				border: 0
+			h4, p
+				margin: 0
+			small
+				float: right
+			&.more
+				text-align: center
+	&.controls
+		width: 880px
+		label
+			float: right
+			font-size: 28px
+			line-height: 45px
+		key
+			display: inline-block
+			border: 1px solid #1a1a1a
+			border-radius: 10px
+			width: 50px
+			height: 50px
+			padding: 10px 0
+			text-align: center
+			margin-right: 5px
+			background: linear-gradient(to bottom, #666 0%, #1a1a1a 100%)
+			color: #fafafa
+		row
+			display: block
+			padding: 0 10px 10px
+			+clearfix()
+		col
+			display: block
+			float: left
+			width: 50%
+			padding-top: 10px
+			padding-left: 7.5px
+			&.left
+				padding-right: 7.5px
+				padding-left: 0
+				text-align: right
+				label
+					float: left
+	&.askForChrome
+		p
+			text-align: center
+	&.confirm
+		text-align: center
+		button[type="submit"]
+			display: inline-block
+			margin: 0 0 0 50px
+	&.inventory
+		+clearfix()
+		item
+			display: block
+			float: left
+			width: 64px
+			height: 64px
+			margin: 2px
+			border-radius: 4px
+			border: 1px solid #a1a1a1

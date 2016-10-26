@@ -1,0 +1,5 @@
+.DS_Store
+backups/
+build/
+chunks/
+node_modules/
