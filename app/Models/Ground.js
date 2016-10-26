@@ -83,7 +83,7 @@ class Ground extends Model {
 		const isNeighbor = (x, z) => (x < 0 || x > Ground.size || z < 0 || z > Ground.size);
 		for(let z=-1;z<Ground.size+1;z++)
 		for(let x=-1;x<Ground.size+1;x++) {
-			if(z > 0 && z < Ground.size && x === 0) x = Ground.size;
+			if(x === 0 && z > -1 && z < Ground.size) x = Ground.size;
 			const p1 = [x, z + 1];
 			let p2 = [x + 1, z + 1];
 			let p3 = [x + 1, z];
