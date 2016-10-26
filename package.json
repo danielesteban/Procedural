@@ -4,7 +4,7 @@
   "author": "Daniel Esteban Nombela",
   "main": "main.js",
   "scripts": {
-    "bumpAmmoMemory": "replace 'Module = Module \\|\\| {};' 'Module = Module || {TOTAL_MEMORY: 196*1024*1024};' node_modules/ammo.js/ammo.js",
+    "bumpAmmoMemory": "replace 'Module = Module \\|\\| {};' 'Module = Module || {TOTAL_MEMORY: 256*1024*1024};' node_modules/ammo.js/ammo.js",
     "clean": "rimraf build",
     "start": "webpack-dev-server --progress --colors --inline --history-api-fallback",
     "build": "cross-env NODE_ENV=production webpack --progress --colors",
