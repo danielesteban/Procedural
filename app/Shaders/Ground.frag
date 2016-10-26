@@ -8,7 +8,7 @@ uniform vec3 sunPosition;
 uniform vec3 cameraPosition;
 uniform float modifier;
 
-const vec3 sand = vec3(.79, .70, .58);
+const vec3 sand = vec3(.76, .70, .50);
 const vec3 grass = vec3(.16, .32, .16);
 const vec3 dirt = vec3(.32, .32, .16);
 const vec3 stone = vec3(.64, .64, .48);
