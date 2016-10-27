@@ -43,26 +43,30 @@ class Ground extends Model {
 		const u = vec3.create();
 		const v = vec3.create();
 		const physicsMesh = new Ammo.btTriangleMesh();
+		const t1 = new Ammo.btVector3();
+		const t2 = new Ammo.btVector3();
+		const t3 = new Ammo.btVector3();
+
 		for(let z=0;z<Ground.size;z++)
 		for(let x=0;x<Ground.size;x++) {
 			const p1 = (z + 1) * (Ground.size + 1) + x;
 			let p2 = (z + 1) * (Ground.size + 1) + (x + 1);
 			let p3 = z * (Ground.size + 1) + x + 1;
 
+			const v1 = vec3.fromValues(position[p1 * 3], position[p1 * 3 + 1], position[p1 * 3 + 2]);
+			let v2 = vec3.fromValues(position[p2 * 3], position[p2 * 3 + 1], position[p2 * 3 + 2]);
+			let v3 = vec3.create();
+
+			t1.setValue(v1[0], v1[1], v1[2]);
+
 			for(let t=0; t<2; t++) {
 				indices[index++] = p1;
 				indices[index++] = p2;
 				indices[index++] = p3;
 
-				const v1 = vec3.fromValues(position[p1 * 3], position[p1 * 3 + 1], position[p1 * 3 + 2]);
-				const v2 = vec3.fromValues(position[p2 * 3], position[p2 * 3 + 1], position[p2 * 3 + 2]);
-				const v3 = vec3.fromValues(position[p3 * 3], position[p3 * 3 + 1], position[p3 * 3 + 2]);
-
-				physicsMesh.addTriangle(
-					new Ammo.btVector3(v1[0], v1[1], v1[2]),
-					new Ammo.btVector3(v2[0], v2[1], v2[2]),
-					new Ammo.btVector3(v3[0], v3[1], v3[2])
-				);
+				v3[0] = position[p3 * 3];
+				v3[1] = position[p3 * 3 + 1];
+				v3[2] =  position[p3 * 3 + 2];
 
 				vec3.subtract(u, v2, v1);
 				vec3.subtract(v, v3, v1);
@@ -74,10 +78,20 @@ class Ground extends Model {
 				if(!normals[p3]) normals[p3] = [];
 				normals[p3].push(n);
 
+				t2.setValue(v2[0], v2[1], v2[2]);
+				t3.setValue(v3[0], v3[1], v3[2]);
+				physicsMesh.addTriangle(
+					t1, t2, t3
+				);
+
 				p2 = p3;
+				vec3.copy(v2, v3);
 				p3 = z * (Ground.size + 1) + x;
 			}
 		}
+		Ammo.destroy(t1);
+		Ammo.destroy(t2);
+		Ammo.destroy(t3);
 
 		/* Include neighbors into existing normals */
 		const isNeighbor = (x, z) => (x < 0 || x > Ground.size || z < 0 || z > Ground.size);
