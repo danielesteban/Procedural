@@ -120,7 +120,6 @@ class Model {
 		this.points && GL.deleteBuffer(this.points);
 		this.physicsMesh && Ammo.destroy(this.physicsMesh);
 		this.collision && Ammo.destroy(this.collision);
-		console.log(this.physicsMesh);
 	}
 };
 

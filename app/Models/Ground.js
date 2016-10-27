@@ -125,7 +125,11 @@ class Ground extends Model {
 			normals.forEach((vnormal) => {
 				vec3.add(sum, sum, vnormal);
 			});
-			vec3.scale(sum, sum, 1 / normals.length);
+			/*
+				Not sure if I actuallly need to avereage this or not
+				Things will become more clear when I add the normals debug renderer
+			*/
+			// vec3.scale(sum, sum, 1 / normals.length);
 			vec3.normalize(sum, sum);
 			normal[i * 3] = sum[0];
 			normal[i * 3 + 1] = sum[1];
