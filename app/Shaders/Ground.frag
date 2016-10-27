@@ -27,14 +27,14 @@ void main(void) {
 		color *= sand * (1.0 - step) + grass * step;
 	} else if(fragPosition.y >= 1.0 && fragPosition.y < 16.0) {
 		color *= grass;
-	} else if(fragPosition.y >= 16.0 && fragPosition.y < 48.0) {
-		step = (fragPosition.y - 16.0) / 32.0;
+	} else if(fragPosition.y >= 16.0 && fragPosition.y < 32.0) {
+		step = (fragPosition.y - 16.0) / 16.0;
 		color *= grass * (1.0 - step) + dirt * step;
-	} else if(fragPosition.y >= 48.0 && fragPosition.y < 80.0) {
-		step = (fragPosition.y - 48.0) / 32.0;
+	} else if(fragPosition.y >= 32.0 && fragPosition.y < 64.0) {
+		step = (fragPosition.y - 32.0) / 32.0;
 		color *= dirt * (1.0 - step) + stone * step;
-	} else if(fragPosition.y >= 80.0 && fragPosition.y < 112.0) {
-		step = (fragPosition.y - 80.0) / 32.0;
+	} else if(fragPosition.y >= 64.0 && fragPosition.y < 96.0) {
+		step = (fragPosition.y - 64.0) / 32.0;
 		color *= stone * (1.0 - step) + snow * step;
 	} else {
 		color *= snow;
