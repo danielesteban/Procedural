@@ -78,6 +78,27 @@ class ImageTexture extends Texture {
 	}
 }
 
+class GroupTexture extends Texture {
+	constructor(groupID, primary, secondary) {
+		super(groupID);
+		this.secondary = GL.createTexture();
+		loading++;
+		const images = this.images = [];
+		[primary, secondary].forEach((id, i) => {
+			const image = images[i] = new Image();
+			image.onload = () => {
+				onLoad.data = groupID + ':' + id;
+				window.dispatchEvent(onLoad);
+				loading--;
+				Loader();
+				this.onLoad(image, i !== 0);
+			};
+			image.src = require('./' + id + '.png');
+			loading++;
+		});
+	}
+}
+
 class CubemapTexture extends Texture {
 	constructor(cubemapID, images) {
 		super(cubemapID, true);
@@ -168,6 +189,6 @@ class AtlasTexture extends Texture {
 	}
 }
 
-export const Grass = new ImageTexture('Grass');
+export const Ground = new GroupTexture('Ground', 'Grass', 'Water');
 
 Loader = Loader();

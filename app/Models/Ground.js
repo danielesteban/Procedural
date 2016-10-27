@@ -4,7 +4,7 @@ import Ammo from 'ammo.js';
 
 class Ground extends Model {
 	static size = 16;
-	static scale = 3;
+	static scale = 2;
 	constructor(noise, chunk) {
 		const position = new Float32Array(Math.pow(Ground.size + 1, 2) * 3);
 		const normal = new Float32Array(Math.pow(Ground.size + 1, 2) * 3);
@@ -18,8 +18,8 @@ class Ground extends Model {
 		const getVertex = (x, z) => {
 			const cX = offset[0] + x * Ground.scale;
 			const cZ = offset[1] + z * Ground.scale;
-			const altitude = Math.floor(Math.abs(noise.perlin2(cZ / 512, cX / 512)) * 128);
-			const height = Math.min(128, Math.floor(Math.abs(noise.simplex2(cX / 256, cZ / 256)) * altitude)) * Ground.scale;
+			const altitude = Math.floor(Math.abs(noise.perlin2(cZ / 384, cX / 384)) * 192);
+			const height = Math.min(192, Math.floor(Math.abs(noise.simplex2(cX / 192, cZ / 192)) * altitude)) * Ground.scale;
 			maxHeight = Math.max(maxHeight, height);
 			return vec3.fromValues(
 				(x - Ground.size * 0.5) * Ground.scale,

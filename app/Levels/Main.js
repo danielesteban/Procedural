@@ -105,6 +105,8 @@ class Main extends Level {
 		GroundShader.sunPosition = vec3.create();
 		this.time = 0;
 		this.timeStep = 10;
+
+		GroundShader.animation = 0;
 	}
 	animate(delta) {
 		super.animate(delta);
@@ -124,6 +126,9 @@ class Main extends Level {
 				Debug.updateTime(this.lastTimeUpdate = time);
 			}
 		}
+
+		/* Water */
+		(GroundShader.animation += delta * 0.1) > 1.0 && (GroundShader.animation %= 1);
 
 		/* Test if we are in a new chunk */
 		const currentChunk = vec2.fromValues(

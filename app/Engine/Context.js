@@ -65,6 +65,9 @@ export const UseShader = (shader) => {
 	currentShader = shader;
 	if(!shader) return;
 	GL.useProgram(shader.program);
+	if(shader.animation !== undefined && shader.uniforms.animation !== null) {
+		GL.uniform1f(shader.uniforms.animation, shader.animation);
+	}
 	if(shader.modifier !== undefined && shader.uniforms.modifier !== null) {
 		GL.uniform1f(shader.uniforms.modifier, shader.modifier);
 	}
