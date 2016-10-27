@@ -105,15 +105,18 @@ class Level {
 			const postLayer = [];
 			this.layers.forEach((layer) => layer.forEach((mesh, i) => {
 				const post = mesh.render(camera);
-				post && postLayer.push(post);
+				post && postLayer.push(Array.isArray(post) ? post : [post]);
 				rendered++;
 			}));
 
 			/* Render the post layer */
 			for(let j=0; j<2; j++) {
-				postLayer.forEach((mesh) => (
-					((j === 0 && !mesh.blending) || (j === 1 && mesh.blending)) && mesh.render(camera)
-				));
+				postLayer.forEach((layer) => layer.forEach((mesh) => {
+					if((j === 0 && !mesh.blending) || (j === 1 && mesh.blending)) {
+						mesh.render(camera);
+						rendered++;
+					}
+				}));
 			}
 		});
 

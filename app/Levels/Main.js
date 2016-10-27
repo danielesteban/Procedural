@@ -3,7 +3,7 @@ import Level from 'Engine/Level';
 import Mesh from 'Engine/Mesh';
 import {Cloud, Ground} from 'Meshes';
 import {Ground as GroundModel} from 'Models';
-import {Cloud as CloudShader, Ground as GroundShader, Skybox as SkyboxShader} from 'Shaders';
+import {Cloud as CloudShader, Ground as GroundShader, Skybox as SkyboxShader, Tree as TreeShader} from 'Shaders';
 import {glMatrix, vec2, vec3} from 'gl-matrix';
 import {Noise} from 'noisejs';
 
@@ -103,6 +103,7 @@ class Main extends Level {
 		/* Day/Night cycle config */
 		SkyboxShader.sunPosition = vec3.create();
 		GroundShader.sunPosition = vec3.create();
+		TreeShader.sunPosition = vec3.create();
 		this.time = 0;
 		this.timeStep = 10;
 
@@ -114,9 +115,10 @@ class Main extends Level {
 		/* Day/Night cycle */
 		this.time += delta * this.timeStep;
 		const sun = CalcSun(this.time);
-		CloudShader.modifier = GroundShader.modifier = Math.min(1, sun.intensity + 0.1);
+		CloudShader.modifier = GroundShader.modifier = TreeShader.modifier = Math.min(1, sun.intensity + 0.1);
 		vec3.copy(SkyboxShader.sunPosition, sun.position);
 		vec3.copy(GroundShader.sunPosition, sun.position);
+		vec3.copy(TreeShader.sunPosition, sun.position);
 		this.stars.modifier = sun.intensity <= 0.25 ? (1 - sun.intensity * 4) : 0;
 
 		/* Debug clock */

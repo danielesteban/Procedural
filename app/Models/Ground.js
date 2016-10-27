@@ -29,11 +29,12 @@ class Ground extends Model {
 		};
 
 		let vertex = 0;
+		const heightMap = {};
 		for(let z=0;z<=Ground.size;z++)
 		for(let x=0;x<=Ground.size;x++) {
 			const v = getVertex(x, z);
 			position[vertex++] = v[0];
-			position[vertex++] = v[1];
+			heightMap[x + ':' + z] = position[vertex++] = v[1];
 			position[vertex++] = v[2];
 		}
 
@@ -128,6 +129,7 @@ class Ground extends Model {
 
 		super({position, normal, indices, bounds}, collision);
 		this.physicsMesh = physicsMesh;
+		this.heightMap = heightMap;
 	}
 };
 

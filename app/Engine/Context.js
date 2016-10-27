@@ -17,6 +17,7 @@ GL.cullFace(GL.BACK);
 GL.blendFunc(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA);
 GL.blendEquation(GL.FUNC_ADD);
 export const Anisotropic = GL.getExtension('EXT_texture_filter_anisotropic') || GL.getExtension('WEBKIT_EXT_texture_filter_anisotropic') || GL.getExtension('MOZ_EXT_texture_filter_anisotropic');
+export const Derivatives = GL.getExtension('OES_standard_derivatives');
 
 /* Clear utility */
 GL.clearColor(0, 0, 0, 1);
