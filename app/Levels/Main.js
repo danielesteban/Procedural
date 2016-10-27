@@ -115,7 +115,7 @@ class Main extends Level {
 		/* Day/Night cycle */
 		this.time += delta * this.timeStep;
 		const sun = CalcSun(this.time);
-		CloudShader.modifier = GroundShader.modifier = TreeShader.modifier = Math.min(1, sun.intensity + 0.1);
+		CloudShader.modifier = GroundShader.modifier = TreeShader.modifier = sun.intensity;
 		vec3.copy(SkyboxShader.sunPosition, sun.position);
 		vec3.copy(GroundShader.sunPosition, sun.position);
 		vec3.copy(TreeShader.sunPosition, sun.position);
