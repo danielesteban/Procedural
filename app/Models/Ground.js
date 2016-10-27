@@ -66,7 +66,7 @@ class Ground extends Model {
 
 				v3[0] = position[p3 * 3];
 				v3[1] = position[p3 * 3 + 1];
-				v3[2] =  position[p3 * 3 + 2];
+				v3[2] = position[p3 * 3 + 2];
 
 				vec3.subtract(u, v2, v1);
 				vec3.subtract(v, v3, v1);
