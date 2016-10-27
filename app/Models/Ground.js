@@ -42,7 +42,7 @@ class Ground extends Model {
 		const normals = [];
 		const u = vec3.create();
 		const v = vec3.create();
-		const physicsMesh = new Ammo.btTriangleMesh(false, false);
+		const physicsMesh = new Ammo.btTriangleMesh();
 		for(let z=0;z<Ground.size;z++)
 		for(let x=0;x<Ground.size;x++) {
 			const p1 = (z + 1) * (Ground.size + 1) + x;
@@ -61,8 +61,7 @@ class Ground extends Model {
 				physicsMesh.addTriangle(
 					new Ammo.btVector3(v1[0], v1[1], v1[2]),
 					new Ammo.btVector3(v2[0], v2[1], v2[2]),
-					new Ammo.btVector3(v3[0], v3[1], v3[2]),
-					false
+					new Ammo.btVector3(v3[0], v3[1], v3[2])
 				);
 
 				vec3.subtract(u, v2, v1);

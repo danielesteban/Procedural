@@ -86,7 +86,7 @@ class Model {
 		this.collision && Ammo.destroy(this.collision);
 		this.physicsMesh && Ammo.destroy(this.physicsMesh);
 
-		this.physicsMesh = new Ammo.btTriangleMesh(false, false);
+		this.physicsMesh = new Ammo.btTriangleMesh();
 		const p1 = new Ammo.btVector3();
 		const p2 = new Ammo.btVector3();
 		const p3 = new Ammo.btVector3();
@@ -95,8 +95,7 @@ class Model {
 			p2.setValue(position[indices[i + 1] * 3], position[indices[i + 1] * 3 + 1], position[indices[i + 1] * 3 + 2]);
 			p3.setValue(position[indices[i + 2] * 3], position[indices[i + 2] * 3 + 1], position[indices[i + 2] * 3 + 2]);
 			this.physicsMesh.addTriangle(
-				p1, p2, p3,
-				false
+				p1, p2, p3
 			);
 		}
 		Ammo.destroy(p1);
