@@ -33,6 +33,7 @@ class Ground extends Mesh {
 	destroy() {
 		super.destroy();
 		this.model.destroy();
+		this.trees.forEach((tree) => tree.destroy());
 	}
 };
 
