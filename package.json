@@ -14,10 +14,10 @@
   "dependencies": {
     "ammo.js": "0.0.10",
     "autoprefixer": "^6.5.1",
-    "babel-cli": "^6.16.0",
-    "babel-core": "^6.17.0",
-    "babel-loader": "^6.2.5",
-    "babel-preset-es2015": "^6.16.0",
+    "babel-cli": "^6.18.0",
+    "babel-core": "^6.18.0",
+    "babel-loader": "^6.2.6",
+    "babel-preset-es2015": "^6.18.0",
     "babel-preset-stage-1": "^6.16.0",
     "cross-env": "^3.1.3",
     "css-loader": "^0.25.0",
@@ -27,7 +27,7 @@
     "fpsmeter": "git+https://github.com/darsain/fpsmeter.git",
     "gl-matrix": "^2.3.2",
     "history": "^4.3.0",
-    "html-webpack-plugin": "^2.22.0",
+    "html-webpack-plugin": "^2.24.0",
     "imagemin-webpack-plugin": "^1.2.1",
     "node-sass": "^3.10.1",
     "noisejs": "^2.1.0",
@@ -40,7 +40,7 @@
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webfontloader": "^1.6.26",
-    "webpack": "^1.13.2"
+    "webpack": "^1.13.3"
   },
   "devDependencies": {
   	"webpack-dev-server": "^1.16.2"
