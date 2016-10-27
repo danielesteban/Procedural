@@ -106,7 +106,7 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.flight ? 32 : 5;
+		const speed = Input.flight ? 32 : 4;
 		const step = speed * delta;
 
 		/* Hackity-hack: always forward */
