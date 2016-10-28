@@ -54,6 +54,7 @@ class Camera {
 		this.updateVectors();
 
 		this.level = level;
+		this.auto = true;
 	}
 	destroy() {
 		window.removeEventListener(ResizeEvent, this.onResize);
@@ -106,17 +107,19 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.flight ? 32 : 4;
+		const speed = Input.flight ? 32 : (this.auto ? 4 : 12);
 		const step = speed * delta;
 
-		/* Hackity-hack: always forward */
-		Input.forward = true;
-		if(Input.forward || Input.backward || Input.left || Input.right || Input.up || Input.down) {
-			Input.forward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, step);
-			// Input.backward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, -step);
-			// Input.left && vec3.scaleAndAdd(this.position, this.position, this.worldRight, -step);
-			// Input.right && vec3.scaleAndAdd(this.position, this.position, this.worldRight, step);
+		/* Keyboard */
+		Input.flight && (this.auto = true);
+		const keystroke = Input.forward || Input.backward || Input.left || Input.right;
+		if(this.auto || keystroke) {
+			(this.auto || Input.forward) && vec3.scaleAndAdd(this.position, this.position, this.worldFront, step);
+			Input.backward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, -step);
+			Input.left && vec3.scaleAndAdd(this.position, this.position, this.worldRight, -step);
+			Input.right && vec3.scaleAndAdd(this.position, this.position, this.worldRight, step);
 			updatePos = true;
+			this.auto && keystroke && (this.auto = false);
 		}
 
 		if(updatePos) {
