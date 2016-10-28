@@ -6,6 +6,7 @@ class Tree extends Mesh {
 	constructor(model, origin) {
 		origin && (origin[1] += model.bounds.length * .3);
 		const rotation = quat.setAxisAngle(quat.create(), vec3.fromValues(1, 0, 0), glMatrix.toRadian(-90 + Math.floor(Math.random() * 31) - 15));
+		quat.rotateY(rotation, rotation, glMatrix.toRadian(Math.floor(Math.random() * 31) - 15));
 		super(model, Shader, origin, rotation);
 	}
 };
