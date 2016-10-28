@@ -14,9 +14,7 @@ void main(void) {
 	float step;
 	if(fragPosition.y < 0.2) {
 		step = fragPosition.y / 0.2;
-		color *= sand * step;
-		color += vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.1 + animation, fragPosition.z * 0.1 + animation))) * (1.0 - step) * 0.5;
-		color += vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.25 - animation, fragPosition.z * 0.25 - animation))) * (1.0 - step) * 0.5;
+		color *= sand * step + (vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.1 + animation, fragPosition.z * 0.1 + animation))) + vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.25 - animation, fragPosition.z * 0.25 - animation)))) * (1.0 - step);
 	} else if(fragPosition.y >= 0.2 && fragPosition.y < 1.0) {
 		step = (fragPosition.y - 0.2) / 0.8;
 		color *= sand * (1.0 - step) + grass * step;
