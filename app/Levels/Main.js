@@ -62,11 +62,10 @@ const CalcSun = (function() {
 				Math.sin(azimuth) * Math.cos(inclination)
 			);
 
-		vec3.normalize(position, position);
 		return {
 			position,
 			date,
-			intensity: Math.min(Math.max(position[1], 0), 1)
+			intensity: Math.min(Math.max(position[1] + 0.2, 0), 1)
 		};
 	}
 })();

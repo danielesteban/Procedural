@@ -21,8 +21,8 @@ void main(void) {
 	float diffuse = max(dot(normal, direction), 0.0);
 
 	vec3 cameraDirection = normalize(cameraPosition - fragPosition);
-  vec3 reflectDirection = reflect(-direction, normal);
-	float specular = pow(max(dot(cameraDirection, reflectDirection), 0.0), 4.0);
+  vec3 halfwayDir = normalize(direction + cameraDirection);
+	float specular = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
-	gl_FragColor = vec4(color * max(0.15, (diffuse + specular) * modifier), 1.0);
+	gl_FragColor = vec4(color * max(0.1, (diffuse + min(diffuse, specular)) * modifier), 1.0);
 }

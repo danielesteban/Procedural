@@ -71,6 +71,7 @@ class Ground extends Model {
 				vec3.subtract(u, v2, v1);
 				vec3.subtract(v, v3, v1);
 				const n = vec3.cross(vec3.create(), u, v);
+				vec3.normalize(n, n);
 				if(!normals[p1]) normals[p1] = [];
 				normals[p1].push(n);
 				if(!normals[p2]) normals[p2] = [];
@@ -109,6 +110,7 @@ class Ground extends Model {
 				vec3.subtract(u, v2, v1);
 				vec3.subtract(v, v3, v1);
 				const n = vec3.cross(vec3.create(), u, v);
+				vec3.normalize(n, n);
 				!isNeighbor(p1[0], p1[1]) && normals[p1[1] * (Ground.size + 1) + p1[0]].push(n);
 				!isNeighbor(p2[0], p2[1]) && normals[p2[1] * (Ground.size + 1) + p2[0]].push(n);
 				!isNeighbor(p3[0], p3[1]) && normals[p3[1] * (Ground.size + 1) + p3[0]].push(n);
@@ -122,14 +124,7 @@ class Ground extends Model {
 
 		normals.forEach((normals, i) => {
 			const sum = vec3.create();
-			normals.forEach((vnormal) => {
-				vec3.add(sum, sum, vnormal);
-			});
-			/*
-				Not sure if I actuallly need to avereage this or not
-				Things will become more clear when I add the normals debug renderer
-			*/
-			// vec3.scale(sum, sum, 1 / normals.length);
+			normals.forEach((vnormal) => vec3.add(sum, sum, vnormal));
 			vec3.normalize(sum, sum);
 			normal[i * 3] = sum[0];
 			normal[i * 3 + 1] = sum[1];
