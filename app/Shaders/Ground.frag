@@ -1,12 +1,7 @@
-precision highp float;
-varying vec3 fragNormal;
-varying vec3 fragPosition;
+@import ./Lighting;
+
 uniform sampler2D texture;
 uniform sampler2D secondaryTexture;
-uniform vec3 sunPosition;
-uniform vec3 cameraPosition;
-uniform float modifier;
-uniform float animation;
 
 const vec3 sand = vec3(.96, .64, .38);
 const vec3 grass = vec3(.16, .32, .16);
@@ -40,13 +35,5 @@ void main(void) {
 		color *= snow;
 	}
 
-	vec3 normal = normalize(fragNormal);
-	vec3 direction = normalize(sunPosition);
-	float diffuse = max(dot(normal, direction), 0.0);
-
-	vec3 cameraDirection = normalize(cameraPosition - fragPosition);
-  vec3 halfwayDir = normalize(direction + cameraDirection);
-	float specular = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-
-	gl_FragColor = vec4(color * max(0.1, (diffuse + min(diffuse, specular)) * modifier), 1.0);
+	gl_FragColor = vec4(color * sunLight(), 1.0);
 }

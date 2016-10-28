@@ -45,8 +45,8 @@ const bundle = function(app) {
 				 }
 			 },
 			 {
-				 test: /\.(frag|vert)$/,
-				 loader: 'raw',
+				 test: /\.(frag|vert|glsl)$/,
+				 loader: 'webpack-glsl',
 				 include: appPath,
 				 exclude: modulesPath
 			 },

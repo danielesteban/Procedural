@@ -8,8 +8,8 @@
     "clean": "rimraf build",
     "start": "webpack-dev-server --progress --colors --inline --history-api-fallback",
     "build": "cross-env NODE_ENV=production webpack --progress --colors",
-		"postinstall": "npm run bumpAmmoMemory && npm run clean && npm run build && npm run promote",
-		"promote": "rimraf production && mv build production"
+    "postinstall": "npm run bumpAmmoMemory && npm run clean && npm run build && npm run promote",
+    "promote": "rimraf production && mv build production"
   },
   "dependencies": {
     "ammo.js": "0.0.10",
@@ -34,16 +34,16 @@
     "perfnow": "^0.2.0",
     "postcss-loader": "^1.0.0",
     "raf": "^3.3.0",
-    "raw-loader": "^0.5.1",
     "replace": "^0.3.0",
     "rimraf": "^2.5.4",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webfontloader": "^1.6.26",
-    "webpack": "^1.13.3"
+    "webpack": "^1.13.3",
+    "webpack-glsl-loader": "^1.0.1"
   },
   "devDependencies": {
-  	"webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2"
   },
   "engines": {
     "node": "6.x"
