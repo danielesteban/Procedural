@@ -45,6 +45,9 @@ class Ground extends Mesh {
 		super.render(camera);
 		return this.trees.concat(this.deers);
 	}
+	animate(delta) {
+		this.trees.concat(this.deers).forEach((mesh) => mesh.animate && mesh.animate(delta));
+	}
 	destroy() {
 		super.destroy();
 		this.model.destroy();
