@@ -43,7 +43,7 @@ class Ground extends Mesh {
 			length: Model.size * Model.scale
 		};
 		if(!this.trees.length) {
-			const spawn = getSpawnPoint(0, 16);
+			const spawn = getSpawnPoint(1, 16);
 			spawn && this.deers.push(new Deer(Ground.Deers[0], spawn, world, bounds));
 		}
 	}
