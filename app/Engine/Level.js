@@ -99,11 +99,14 @@ class Level {
 		}
 
 		let rendered = 0;
+		let loaded = 0;
 		cameras.forEach((camera) => {
 			GL.viewport(camera.viewport.x, camera.viewport.y, camera.viewport.w, camera.viewport.h);
 			/* Render all the meshes */
 			const postLayer = [];
 			this.layers.forEach((layer) => layer.forEach((mesh, i) => {
+				loaded++;
+				if(!this.camera.inFustrum(mesh)) return;
 				const post = mesh.render(camera);
 				post && postLayer.push(Array.isArray(post) ? post : [post]);
 				rendered++;
@@ -113,6 +116,8 @@ class Level {
 			for(let j=0; j<2; j++) {
 				postLayer.forEach((layer) => layer.forEach((mesh) => {
 					if((j === 0 && !mesh.blending) || (j === 1 && mesh.blending)) {
+						loaded++;
+						if(!this.camera.inFustrum(mesh)) return;
 						mesh.render(camera);
 						rendered++;
 					}
@@ -126,7 +131,7 @@ class Level {
 			Input.screenshot = false;
 		}
 
-		Debug && Debug.updateMeshes(rendered, rendered);
+		Debug && Debug.updateMeshes(rendered, loaded);
 	}
 }
 

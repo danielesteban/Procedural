@@ -190,6 +190,17 @@ class Camera {
 		Ammo.destroy(ray);
 		return floorY;
 	}
+	inFustrum(mesh) {
+		/* 2D Frustum culling */
+		if(!mesh.bounds) return true;
+		const origin = vec3.scaleAndAdd(vec3.create(), this.position, this.front, -1);
+		for(let i=0; i<mesh.bounds.length; i++) {
+			let angle = Math.atan2(mesh.bounds[i][2] - origin[2], mesh.bounds[i][0] - origin[0]) - this.tilt;
+			while(angle > Math.PI) angle -= Math.PI * 2;
+			while(angle < -Math.PI) angle += Math.PI * 2;
+			if(Math.abs(angle) < Math.PI * 0.5) return true;
+		}
+	}
 }
 
 export default Camera;
