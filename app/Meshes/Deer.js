@@ -53,6 +53,7 @@ class Deer extends Mesh {
 			break;
 		}
 		mat4.fromRotationTranslationScale(this.transform, this.rotation, this.origin, this.model.scale);
+		mat3.normalFromMat4(this.normalTransform, this.transform);
 	}
 };
 
