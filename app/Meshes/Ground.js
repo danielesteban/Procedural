@@ -47,10 +47,6 @@ class Ground extends Mesh {
 			spawn && this.deers.push(new Deer(Ground.Deers[0], spawn, world, bounds));
 		}
 	}
-	render(camera) {
-		super.render(camera);
-		return this.trees.concat(this.deers);
-	}
 	animate(delta) {
 		this.deers.forEach((mesh) => mesh.animate(delta));
 	}
@@ -58,6 +54,10 @@ class Ground extends Mesh {
 		super.destroy();
 		this.model.destroy();
 		this.trees.concat(this.deers).forEach((mesh) => mesh.destroy());
+	}
+	render(camera) {
+		super.render(camera);
+		return this.trees.concat(this.deers);
 	}
 };
 
