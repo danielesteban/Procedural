@@ -1,6 +1,6 @@
 import Mesh from 'Engine/Mesh';
 import {Deer as Shader} from 'Shaders';
-import {glMatrix, vec3, mat4, quat} from 'gl-matrix';
+import {glMatrix, vec3, mat3, mat4, quat} from 'gl-matrix';
 
 class Deer extends Mesh {
 	constructor(model, origin) {
