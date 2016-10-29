@@ -52,7 +52,7 @@ class Ground extends Mesh {
 		return this.trees.concat(this.deers);
 	}
 	animate(delta) {
-		this.trees.concat(this.deers).forEach((mesh) => mesh.animate && mesh.animate(delta));
+		this.deers.forEach((mesh) => mesh.animate(delta));
 	}
 	destroy() {
 		super.destroy();
