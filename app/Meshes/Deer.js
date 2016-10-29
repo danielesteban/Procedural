@@ -21,7 +21,7 @@ class Deer extends Mesh {
 			this.animationStep = 0;
 			++this.animation > 5 && (this.animation = 0);
 		}
-		let easedAnimation
+		let easedAnimation;
 		switch(this.animation) {
 			case 0:
 				easedAnimation = Mesh.easeInOut(this.animationStep, 20) * -1 + 10;
