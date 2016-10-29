@@ -19,7 +19,7 @@ class Deer extends Mesh {
 		this.resetAnimation();
 	}
 	resetAnimation() {
-		if(Math.random() <= 0.3) {
+		if(Math.abs(this.pitch) <= 0.01 && Math.random() <= 0.3) {
 			this.animation = {chill: Math.floor(Math.random() * 10) + 1};
 			this.speed = Math.floor(Math.random() * 4) + 1;
 			return;
