@@ -1,16 +1,15 @@
 import Mesh from 'Engine/Mesh';
-import {Deer as Shader} from 'Shaders';
+import {Animal as Shader} from 'Shaders';
 import {glMatrix, vec3, mat3, mat4, quat} from 'gl-matrix';
 import Ammo from 'ammo.js';
 
-class Deer extends Mesh {
-	constructor(model, origin, world, bounds) {
+class Animal extends Mesh {
+	constructor({model, albedo}, origin, world, bounds) {
 		super(model, Shader, origin);
-		this.albedo = vec3.fromValues(
-			.32 + (Math.floor(Math.random() * 3) - 1) * 0.05,
-			.16 + (Math.floor(Math.random() * 3) - 1) * 0.05,
-			.08 + (Math.floor(Math.random() * 3) - 1) * 0.05
-		);
+		this.albedo = vec3.clone(albedo);
+		this.albedo[0] += (Math.floor(Math.random() * 3) - 1) * 0.05;
+		this.albedo[1] += (Math.floor(Math.random() * 3) - 1) * 0.05;
+		this.albedo[2] += (Math.floor(Math.random() * 3) - 1) * 0.05;
 		this.world = world;
 		this.animationBounds = bounds;
 		this.tilt = 0;
@@ -62,7 +61,7 @@ class Deer extends Mesh {
 		this.world.rayTest(from, to, ray);
 		if(ray.hasHit()) {
 			let floorY = ray.get_m_hitPointWorld().y();
-			floorY < 0.01 && (floorY = -2);
+			floorY < 0.01 && (floorY = this.model.bounds.height * -0.5);
 			this.origin[1] = floorY;
 			Ammo.destroy(ray);
 		}
@@ -86,4 +85,4 @@ class Deer extends Mesh {
 	}
 };
 
-export default Deer;
+export default Animal;

@@ -59,9 +59,9 @@ class Shader {
 	}
 }
 
+export const Animal = new Shader('Ground', 'Animal', null, ['sunPosition']);
 export const Cloud = new Shader('Cloud');
 export const Ground = new Shader('Ground', null, null, ['sunPosition']);
-export const Deer = new Shader('Ground', 'Deer', null, ['sunPosition']);
 export const Skybox = new Shader('Skybox', null, null, ['sunPosition']);
 export const Stars = new Shader('Stars');
 export const Tree = new Shader('Ground', 'Tree', null, ['sunPosition']);

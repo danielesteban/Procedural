@@ -1,8 +1,8 @@
 import Mesh from 'Engine/Mesh';
-import {Ground as Model, Deer as DeerModel, Tree as TreeModel} from 'Models';
+import {Ground as Model, Deer as DeerModel, Tree as TreeModel, Wolf as WolfModel} from 'Models';
 import {Ground as Shader} from 'Shaders';
 import {Ground as Texture} from 'Textures';
-import {Deer, Tree} from 'Meshes';
+import {Animal, Tree} from 'Meshes';
 import {vec3} from 'gl-matrix';
 
 class Ground extends Mesh {
@@ -11,8 +11,15 @@ class Ground extends Mesh {
 		new TreeModel(3),
 		new TreeModel(4)
 	];
-	static Deers = [
-		new DeerModel(0.01)
+	static Animals = [
+		{
+			albedo: vec3.fromValues(0.32, 0.16, 0.08),
+			model: new DeerModel(0.01)
+		},
+		{
+			albedo: vec3.fromValues(0.32, 0.30, 0.28),
+			model: new WolfModel(0.01)
+		}
 	];
 	constructor(world, noise, chunk) {
 		const origin = vec3.fromValues(chunk[0] * Model.size * Model.scale, 0, chunk[1] * Model.size * Model.scale);
@@ -35,7 +42,7 @@ class Ground extends Mesh {
 			if(!spawn) continue;
 			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * 3)], spawn));
 		}
-		this.deers = [];
+		this.animals = [];
 		const bounds = {
 			x: origin[0] - Model.size * 0.5 * Model.scale,
 			z: origin[2] - Model.size * 0.5 * Model.scale,
@@ -44,20 +51,20 @@ class Ground extends Mesh {
 		};
 		if(!this.trees.length) {
 			const spawn = getSpawnPoint(1, 16);
-			spawn && this.deers.push(new Deer(Ground.Deers[0], spawn, world, bounds));
+			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * 2)], spawn, world, bounds));
 		}
 	}
 	animate(delta) {
-		this.deers.forEach((mesh) => mesh.animate(delta));
+		this.animals.forEach((mesh) => mesh.animate(delta));
 	}
 	destroy() {
 		super.destroy();
 		this.model.destroy();
-		this.trees.concat(this.deers).forEach((mesh) => mesh.destroy());
+		this.trees.concat(this.animals).forEach((mesh) => mesh.destroy());
 	}
 	render(camera) {
 		super.render(camera);
-		return this.trees.concat(this.deers);
+		return this.trees.concat(this.animals);
 	}
 };
 
