@@ -1,11 +1,12 @@
 import Mesh from 'Engine/Mesh';
 import {Animal as Shader} from 'Shaders';
+import {Fur as Texture} from 'Textures';
 import {glMatrix, vec3, mat3, mat4, quat} from 'gl-matrix';
 import Ammo from 'ammo.js';
 
 class Animal extends Mesh {
 	constructor({model, albedo}, origin, world, bounds) {
-		super(model, Shader, origin);
+		super(model, Shader, origin, null, null, Texture);
 		this.albedo = vec3.clone(albedo);
 		this.albedo[0] += (Math.floor(Math.random() * 3) - 1) * 0.05;
 		this.albedo[1] += (Math.floor(Math.random() * 3) - 1) * 0.05;

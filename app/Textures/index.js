@@ -189,6 +189,7 @@ class AtlasTexture extends Texture {
 	}
 }
 
+export const Fur = new ImageTexture('Fur');
 export const Ground = new GroupTexture('Ground', 'Grass', 'Water');
 
 Loader = Loader();
