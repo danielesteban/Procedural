@@ -1,59 +1,88 @@
 import Mesh from 'Engine/Mesh';
 import {Deer as Shader} from 'Shaders';
 import {glMatrix, vec3, mat3, mat4, quat} from 'gl-matrix';
+import Ammo from 'ammo.js';
 
 class Deer extends Mesh {
-	constructor(model, origin) {
-		const rotation = quat.setAxisAngle(quat.create(), vec3.fromValues(0, 1, 0), glMatrix.toRadian(Math.floor(Math.random() * 361) - 180));
-		quat.rotateX(rotation, rotation, glMatrix.toRadian(Math.floor(Math.random() * -21)));
-		super(model, Shader, origin, rotation);
+	constructor(model, origin, world, bounds) {
+		super(model, Shader, origin);
 		this.albedo = vec3.fromValues(
 			.32 + (Math.floor(Math.random() * 3) - 1) * 0.05,
 			.16 + (Math.floor(Math.random() * 3) - 1) * 0.05,
 			.08 + (Math.floor(Math.random() * 3) - 1) * 0.05
 		);
-		this.animation = Math.floor(Math.random() * 6);
-		this.animationStep = Math.random();
+		this.world = world;
+		this.animationBounds = bounds;
+		this.tilt = 0;
+		this.pitch = 0;
+		this.speed = Math.floor(Math.random() * 4) + 1;
+		this.resetAnimation();
+	}
+	resetAnimation() {
+		if(Math.random() <= 0.3) {
+			this.animation = {chill: Math.floor(Math.random() * 10) + 1};
+			this.speed = Math.floor(Math.random() * 4) + 1;
+			return;
+		}
+
+		const destination = {
+			x: this.animationBounds.x + Math.floor(Math.random() * this.animationBounds.width),
+			z: this.animationBounds.z + Math.floor(Math.random() * this.animationBounds.length)
+		};
+		const dx = destination.x - this.origin[0];
+		const dz = destination.z - this.origin[2];
+		const distance = Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2));
+		const tilt = Math.atan2(dz, dx);
+		const direction = vec3.fromValues(Math.cos(tilt), 0, Math.sin(tilt));
+		this.animation = {
+			destination, direction, distance,
+			tilt
+		};
 	}
 	animate(delta) {
-		const step = this.animation === 0 || this.animation === 5 ? 0.6 : 1.2;
-		if((this.animationStep += delta * step) > 1) {
-			this.animationStep = 0;
-			++this.animation > 5 && (this.animation = 0);
+		if(this.animation.chill !== undefined) {
+			return ((this.animation.chill -= delta) <= 0) && this.resetAnimation();
 		}
-		let easedAnimation;
-		switch(this.animation) {
-			case 0:
-				easedAnimation = Mesh.easeInOut(this.animationStep, 20) * -1 + 10;
-				quat.rotateX(this.rotation, this.initialRotation, glMatrix.toRadian(easedAnimation));
-			break;
-			case 1:
-				easedAnimation = Mesh.easeOut(this.animationStep, 10);
-				quat.rotateX(this.rotation, this.initialRotation, glMatrix.toRadian(-10));
-				quat.rotateY(this.rotation, this.rotation, glMatrix.toRadian(easedAnimation));
-			break;
-			case 2:
-				easedAnimation = Mesh.easeIn(this.animationStep, 10);
-				quat.rotateX(this.rotation, this.initialRotation, glMatrix.toRadian(-10));
-				quat.rotateY(this.rotation, this.rotation, glMatrix.toRadian(10 - easedAnimation));
-			break;
-			case 3:
-				easedAnimation = Mesh.easeOut(this.animationStep, 10) * -1;
-				quat.rotateX(this.rotation, this.initialRotation, glMatrix.toRadian(-10));
-				quat.rotateY(this.rotation, this.rotation, glMatrix.toRadian(easedAnimation));
-			break;
-			case 4:
-				easedAnimation = Mesh.easeIn(this.animationStep, 10) * -1;
-				quat.rotateX(this.rotation, this.initialRotation, glMatrix.toRadian(-10));
-				quat.rotateY(this.rotation, this.rotation, glMatrix.toRadian(-10 - easedAnimation));
-			break;
-			case 5:
-				easedAnimation = Mesh.easeInOut(this.animationStep, 20) * -1 + 10;
-				quat.rotateX(this.rotation, this.initialRotation, glMatrix.toRadian(easedAnimation * -1));
-			break;
+
+		let done = false;
+		const step = delta * this.speed;
+		const prevY = this.origin[1];
+		if((this.animation.distance -= step) <= 0) {
+			this.origin[0] = this.animation.destination.x;
+			this.origin[2] = this.animation.destination.z;
+			done = true;
+		} else {
+			vec3.scaleAndAdd(this.origin, this.origin, this.animation.direction, step);
 		}
+
+		const from = new Ammo.btVector3(this.origin[0], 256, this.origin[2]);
+		const to = new Ammo.btVector3(this.origin[0], -1, this.origin[2]);
+		const ray = new Ammo.ClosestRayResultCallback(from, to);
+		ray.set_m_collisionFilterMask(Mesh.collisionFloor);
+		this.world.rayTest(from, to, ray);
+		if(ray.hasHit()) {
+			let floorY = ray.get_m_hitPointWorld().y();
+			floorY < 0.01 && (floorY = -2);
+			this.origin[1] = floorY;
+			Ammo.destroy(ray);
+		}
+		Ammo.destroy(to);
+		Ammo.destroy(from);
+
+		const rotationStep = step * 0.5;
+		const tiltDiff = this.animation.tilt - this.tilt;
+		this.tilt += Math.min(Math.max(tiltDiff, -rotationStep), rotationStep);
+		quat.rotateY(this.rotation, this.initialRotation, Math.PI * 0.5 - this.tilt);
+		const pitchDiff = Math.atan2(prevY - this.origin[1], step) - this.pitch;
+		this.pitch += Math.min(Math.max(pitchDiff, -rotationStep), rotationStep);
+		quat.rotateX(this.rotation, this.rotation, this.pitch);
+
 		mat4.fromRotationTranslationScale(this.transform, this.rotation, this.origin, this.model.scale);
 		mat3.normalFromMat4(this.normalTransform, this.transform);
+
+		this.updateBounds();
+
+		done && this.resetAnimation();
 	}
 };
 

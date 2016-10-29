@@ -14,7 +14,7 @@ class Ground extends Mesh {
 	static Deers = [
 		new DeerModel(0.01)
 	];
-	constructor(noise, chunk) {
+	constructor(world, noise, chunk) {
 		const origin = vec3.fromValues(chunk[0] * Model.size * Model.scale, 0, chunk[1] * Model.size * Model.scale);
 		super(new Model(noise, chunk), Shader, origin, null, {mass: 0, friction: 1, group: Mesh.collisionFloor}, Texture);
 		this.chunk = chunk;
@@ -36,9 +36,15 @@ class Ground extends Mesh {
 			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * 3)], spawn));
 		}
 		this.deers = [];
+		const bounds = {
+			x: origin[0] - Model.size * 0.5 * Model.scale,
+			z: origin[2] - Model.size * 0.5 * Model.scale,
+			width: Model.size * Model.scale,
+			length: Model.size * Model.scale
+		};
 		if(!this.trees.length) {
 			const spawn = getSpawnPoint(2, 18);
-			spawn && this.deers.push(new Deer(Ground.Deers[0], spawn));
+			spawn && this.deers.push(new Deer(Ground.Deers[0], spawn, world, bounds));
 		}
 	}
 	render(camera) {

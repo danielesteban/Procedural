@@ -179,7 +179,7 @@ class Main extends Level {
 		const chunk = this.queue.shift();
 		const chunkID = chunk[0] + ':' + chunk[1];
 		delete this.queued[chunkID];
-		const mesh = new Ground(this.noise, chunk);
+		const mesh = new Ground(this.world, this.noise, chunk);
 		this.chunks.push(mesh);
 		this.world.addRigidBody(mesh.body, mesh.collisionGroup, Mesh.collisionAll);
 		this.queue.length && this.processQueue((iteration || 0) + 1);
