@@ -73,7 +73,7 @@ class Animal extends Mesh {
 		let tiltDiff = this.animation.tilt - this.tilt;
 		while(tiltDiff < -Math.PI) tiltDiff += Math.PI * 2;
 		while(tiltDiff > Math.PI) tiltDiff -= Math.PI * 2;
-		this.tilt += Math.min(Math.max(tiltDiff, -rotationStep), rotationStep);
+		this.tilt += Math.min(Math.max(tiltDiff, -rotationStep * 2), rotationStep * 2);
 		quat.rotateY(this.rotation, this.initialRotation, Math.PI * 0.5 - this.tilt);
 		const pitchDiff = Math.atan2(prevY - this.origin[1], step) - this.pitch;
 		this.pitch += Math.min(Math.max(pitchDiff, -rotationStep), rotationStep);
