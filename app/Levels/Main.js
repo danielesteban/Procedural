@@ -66,7 +66,7 @@ const CalcSun = (function() {
 		return {
 			position,
 			date,
-			intensity: Math.min(Math.max(position[1] + 0.1, 0), 1)
+			intensity: Math.min(Math.max(position[1] + 0.2, 0), 1)
 		};
 	}
 })();

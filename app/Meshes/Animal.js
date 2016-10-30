@@ -15,13 +15,13 @@ class Animal extends Mesh {
 		this.animationBounds = bounds;
 		this.tilt = 0;
 		this.pitch = 0;
-		this.speed = Math.floor(Math.random() * 2) + 0.5;
+		this.speed = Math.floor(Math.random() * 2) + 1;
 		this.resetAnimation();
 	}
 	resetAnimation() {
 		if(Math.abs(this.pitch) <= 0.01 && Math.random() <= 0.3) {
 			this.animation = {chill: Math.floor(Math.random() * 10) + 1};
-			this.speed = Math.floor(Math.random() * 2) + 0.5;
+			this.speed = Math.floor(Math.random() * 2) + 1;
 			return;
 		}
 
@@ -63,7 +63,8 @@ class Animal extends Mesh {
 		if(ray.hasHit()) {
 			let floorY = ray.get_m_hitPointWorld().y();
 			floorY < 0.01 && (floorY = this.model.bounds.height * -0.5);
-			this.origin[1] = floorY;
+			const yDiff = floorY - this.origin[1];
+			this.origin[1] += Math.min(Math.max(yDiff, -step), step);
 		}
 		Ammo.destroy(ray);
 		Ammo.destroy(to);
@@ -75,7 +76,7 @@ class Animal extends Mesh {
 		this.tilt += Math.min(Math.max(tiltDiff, -step), step);
 		quat.rotateY(this.rotation, this.initialRotation, Math.PI * 0.5 - this.tilt);
 		const pitchDiff = Math.atan2(prevY - this.origin[1], step) - this.pitch;
-		this.pitch += Math.min(Math.max(pitchDiff, step * -0.5), step * 0.5);
+		this.pitch += Math.min(Math.max(pitchDiff, step * -0.75), step * 0.75);
 		quat.rotateX(this.rotation, this.rotation, this.pitch);
 
 		mat4.fromRotationTranslationScale(this.transform, this.rotation, this.origin, this.model.scale);
