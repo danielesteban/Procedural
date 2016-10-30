@@ -40,7 +40,7 @@ class Ground extends Mesh {
 		for(let i=0; i<2; i++) {
 			const spawn = getSpawnPoint(16, 48);
 			if(!spawn) continue;
-			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * 3)], spawn));
+			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * Ground.Trees.length)], spawn));
 		}
 
 		this.animals = [];
@@ -52,7 +52,7 @@ class Ground extends Mesh {
 		};
 		for(let i=0; i<2; i++) {
 			const spawn = getSpawnPoint(1, 16);
-			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * 2)], spawn, world, bounds));
+			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * Ground.Animals.length)], spawn, world, bounds));
 		}
 	}
 	animate(delta, camera) {

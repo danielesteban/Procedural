@@ -111,6 +111,9 @@ class Mesh {
 		if(this.modifier !== undefined && this.shader.uniforms.modifier !== null) {
 			GL.uniform1f(this.shader.uniforms.modifier, this.modifier);
 		}
+		if(this.model.scale !== undefined && this.shader.uniforms.scale !== null) {
+			GL.uniform3fv(this.shader.uniforms.scale, this.model.scale);
+		}
 		BindModel(this.model);
 		this.texture !== undefined && BindTexture(this.texture);
 		this.culling !== undefined && GL.cullFace(this.culling);

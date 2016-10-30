@@ -49,6 +49,7 @@ class Shader {
 			alpha: GL.getUniformLocation(this.program, "alpha"),
 			animation: GL.getUniformLocation(this.program, "animation"),
 			modifier: GL.getUniformLocation(this.program, "modifier"),
+			scale: GL.getUniformLocation(this.program, "scale"),
 			texture: GL.getUniformLocation(this.program, "texture"),
 			secondaryTexture: GL.getUniformLocation(this.program, "secondaryTexture"),
 			cameraPosition: GL.getUniformLocation(this.program, "cameraPosition"),
