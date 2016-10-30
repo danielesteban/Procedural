@@ -13,12 +13,15 @@ export const State = {
 	backward: 0,
 	left: 0,
 	right: 0,
+	run: 0,
 	flight: 0,
 	fastTime: 0,
 	screenshot: 0
 };
 const resetState = () => {
 	const persist = [
+		'run',
+		'flight',
 		'fastTime'
 	];
 	for(let id in State) !(~persist.indexOf(id)) && (State[id] = 0);
@@ -135,9 +138,15 @@ const onKey = (e) => {
 		case 68:
 			State.right = state;
 		break;
+		case 16:
+			e.preventDefault();
+			State.run = state;
+		break;
 		case 32:
 			e.preventDefault();
-			State.flight = state;
+			if(state) {
+				State.flight = !State.flight;
+			}
 		break;
 		case 79:
 			if(state) {

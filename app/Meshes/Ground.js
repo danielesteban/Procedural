@@ -17,9 +17,9 @@ class Ground extends Mesh {
 		}
 	];
 	static Trees = [
-		new TreeModel(2),
-		new TreeModel(3),
-		new TreeModel(4)
+		new TreeModel(1.5),
+		new TreeModel(2.5),
+		new TreeModel(3.5)
 	];
 	constructor(world, noise, chunk) {
 		const origin = vec3.fromValues(chunk[0] * Model.size * Model.scale, 0, chunk[1] * Model.size * Model.scale);

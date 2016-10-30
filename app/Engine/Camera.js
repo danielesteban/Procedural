@@ -54,7 +54,7 @@ class Camera {
 		this.updateVectors();
 
 		this.level = level;
-		this.auto = true;
+		Input.flight = true;
 	}
 	destroy() {
 		window.removeEventListener(ResizeEvent, this.onResize);
@@ -107,26 +107,25 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.flight ? 32 : (this.auto ? 4 : 12);
+		const speed = Input.flight ? 32 : (Input.run ? 12 : 6);
 		const step = speed * delta;
 
 		/* Keyboard */
-		Input.flight && (this.auto = true);
 		const keystroke = Input.forward || Input.backward || Input.left || Input.right;
-		if(this.auto || keystroke) {
-			(this.auto || Input.forward) && vec3.scaleAndAdd(this.position, this.position, this.worldFront, step);
+		if(Input.flight || keystroke) {
+			(Input.flight || Input.forward) && vec3.scaleAndAdd(this.position, this.position, this.worldFront, step);
 			Input.backward && vec3.scaleAndAdd(this.position, this.position, this.worldFront, -step);
 			Input.left && vec3.scaleAndAdd(this.position, this.position, this.worldRight, -step);
 			Input.right && vec3.scaleAndAdd(this.position, this.position, this.worldRight, step);
 			updatePos = true;
-			this.auto && keystroke && (this.auto = false);
+			keystroke && (Input.flight = false);
 		}
 
 		/* Pull to floor level */
 		const floorY = this.getFloorY();
-		const floorDiff = Math.max(floorY + (Input.flight ? 10 : 0), Input.flight ? 30 : 2) - this.position[1];
+		const floorDiff = Math.max(floorY + (Input.flight ? 10 : 0), Input.flight ? 30 : 0) - this.position[1];
 		if(Math.abs(floorDiff) > 0.0001) {
-			this.position[1] += Math.min(Math.max(floorDiff, step * -0.5), floorY > this.position[1] + (Input.flight ? step * 4 : 0) ? floorDiff : step * 0.5);
+			this.position[1] += Math.min(Math.max(floorDiff, -step), floorY > this.position[1] + (Input.flight ? step * 4 : 0) ? floorDiff : step * 0.6);
 			updatePos = true;
 		}
 
