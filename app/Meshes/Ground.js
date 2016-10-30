@@ -38,7 +38,7 @@ class Ground extends Mesh {
 
 		this.trees = [];
 		for(let i=0; i<2; i++) {
-			const spawn = getSpawnPoint(16, 48);
+			const spawn = getSpawnPoint(8, 40);
 			if(!spawn) continue;
 			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * Ground.Trees.length)], spawn));
 		}
