@@ -64,8 +64,8 @@ class Animal extends Mesh {
 			let floorY = ray.get_m_hitPointWorld().y();
 			floorY < 0.01 && (floorY = this.model.bounds.height * -0.5);
 			this.origin[1] = floorY;
-			Ammo.destroy(ray);
 		}
+		Ammo.destroy(ray);
 		Ammo.destroy(to);
 		Ammo.destroy(from);
 

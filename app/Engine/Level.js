@@ -57,7 +57,7 @@ class Level {
 		this.world.stepSimulation(delta, 10, 1 / 60);
 
 		/* Animate all meshes */
-		this.layers.forEach((layer) => layer.forEach((mesh) => mesh.animate && mesh.animate(delta)));
+		this.layers.forEach((layer) => layer.forEach((mesh) => mesh.animate && mesh.animate(delta, this.camera.position)));
 
 		/* Update all transforms */
 		this.layers.forEach((layer) => layer.forEach((mesh) => mesh.updateTransform && mesh.updateTransform()));

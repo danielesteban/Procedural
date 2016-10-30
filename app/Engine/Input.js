@@ -14,10 +14,15 @@ export const State = {
 	left: 0,
 	right: 0,
 	flight: 0,
+	fastTime: 0,
 	screenshot: 0
 };
 const resetState = () => {
-	for(let id in State) State[id] = 0;
+	const persist = [
+		'freezeTime',
+		'fastTime'
+	];
+	for(let id in State) !(~persist.indexOf(id)) && (State[id] = 0);
 };
 aE(window, 'blur', resetState);
 
@@ -134,6 +139,11 @@ const onKey = (e) => {
 		case 32:
 			e.preventDefault();
 			State.flight = state;
+		break;
+		case 79:
+			if(state) {
+				State.fastTime = !State.fastTime;
+			}
 		break;
 		case 80:
 			State.screenshot = state ? {} : false;

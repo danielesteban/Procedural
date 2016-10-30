@@ -6,11 +6,6 @@ import {Animal, Tree} from 'Meshes';
 import {vec3} from 'gl-matrix';
 
 class Ground extends Mesh {
-	static Trees = [
-		new TreeModel(2),
-		new TreeModel(3),
-		new TreeModel(4)
-	];
 	static Animals = [
 		{
 			albedo: vec3.fromValues(0.32, 0.16, 0.08),
@@ -20,6 +15,11 @@ class Ground extends Mesh {
 			albedo: vec3.fromValues(0.32, 0.30, 0.28),
 			model: new WolfModel(0.01)
 		}
+	];
+	static Trees = [
+		new TreeModel(2),
+		new TreeModel(3),
+		new TreeModel(4)
 	];
 	constructor(world, noise, chunk) {
 		const origin = vec3.fromValues(chunk[0] * Model.size * Model.scale, 0, chunk[1] * Model.size * Model.scale);
@@ -42,6 +42,7 @@ class Ground extends Mesh {
 			if(!spawn) continue;
 			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * 3)], spawn));
 		}
+
 		this.animals = [];
 		const bounds = {
 			x: origin[0] - Model.size * 0.5 * Model.scale,
@@ -49,13 +50,15 @@ class Ground extends Mesh {
 			width: Model.size * Model.scale,
 			length: Model.size * Model.scale
 		};
-		if(!this.trees.length) {
+		for(let i=0; i<2; i++) {
 			const spawn = getSpawnPoint(1, 16);
 			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * 2)], spawn, world, bounds));
 		}
 	}
-	animate(delta) {
-		this.animals.forEach((mesh) => mesh.animate(delta));
+	animate(delta, camera) {
+		if(this.renderAnimals = (vec3.distance(camera, this.origin) <= 320)) {
+			this.animals.forEach((mesh) => mesh.animate(delta));
+		}
 	}
 	destroy() {
 		super.destroy();
@@ -64,7 +67,8 @@ class Ground extends Mesh {
 	}
 	render(camera) {
 		super.render(camera);
-		return this.trees.concat(this.animals);
+		if(this.renderAnimals) return this.trees.concat(this.animals);
+		return this.trees;
 	}
 };
 

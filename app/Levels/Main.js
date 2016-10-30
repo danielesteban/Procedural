@@ -1,6 +1,7 @@
 import {Debug} from 'Engine/Context';
 import Level from 'Engine/Level';
 import Mesh from 'Engine/Mesh';
+import {State as Input} from 'Engine/Input';
 import {Cloud, Ground} from 'Meshes';
 import {Ground as GroundModel} from 'Models';
 import {Cloud as CloudShader, Ground as GroundShader, Animal as AnimalShader, Skybox as SkyboxShader, Tree as TreeShader} from 'Shaders';
@@ -42,7 +43,7 @@ const CalcSun = (function() {
 		date = new Date(2016, 5, 20, 6);
 
 	return function(accumulator) {
-		const time = accumulator % 1020;
+		const time = accumulator % 1080;
 		date.setHours(6 + (time / 60));
 		date.setMinutes(time % 60);
 
@@ -104,8 +105,7 @@ class Main extends Level {
 		GroundShader.sunPosition = vec3.create();
 		AnimalShader.sunPosition = vec3.create();
 		TreeShader.sunPosition = vec3.create();
-		this.time = 60;
-		this.timeStep = 10;
+		this.time = 0;
 
 		GroundShader.animation = 0;
 	}
@@ -113,7 +113,7 @@ class Main extends Level {
 		super.animate(delta);
 
 		/* Day/Night cycle */
-		this.time += delta * this.timeStep;
+		this.time += delta * (Input.fastTime ? 100 : 10);
 		const sun = CalcSun(this.time);
 		CloudShader.modifier = GroundShader.modifier = AnimalShader.modifier = TreeShader.modifier = sun.intensity;
 		vec3.copy(SkyboxShader.sunPosition, sun.position);
