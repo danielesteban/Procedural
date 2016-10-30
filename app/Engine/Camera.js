@@ -8,7 +8,7 @@ class Camera {
 	constructor(level) {
 		/* Camera */
 		this.height = 2;
-		this.cameraOffset = this.height * 0.425;
+		this.cameraOffset = this.height * 0.375;
 		this.fov = glMatrix.toRadian(75);
 		this.tilt = glMatrix.toRadian(270);
 		this.pitch = glMatrix.toRadian(-15);
