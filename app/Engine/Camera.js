@@ -124,7 +124,7 @@ class Camera {
 
 		/* Pull to floor level */
 		const floorY = this.getFloorY();
-		const floorDiff = Math.max(floorY + (Input.flight ? 10 : 0), Input.flight ? 30 : 1) - this.position[1];
+		const floorDiff = Math.max(floorY + (Input.flight ? 10 : 0), Input.flight ? 30 : 2) - this.position[1];
 		if(Math.abs(floorDiff) > 0.0001) {
 			this.position[1] += Math.min(Math.max(floorDiff, step * -0.5), floorY > this.position[1] + (Input.flight ? step * 4 : 0) ? floorDiff : step * 0.5);
 			updatePos = true;

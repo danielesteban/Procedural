@@ -15,13 +15,13 @@ class Animal extends Mesh {
 		this.animationBounds = bounds;
 		this.tilt = 0;
 		this.pitch = 0;
-		this.speed = Math.floor(Math.random() * 4) + 1;
+		this.speed = Math.floor(Math.random() * 2) + 0.5;
 		this.resetAnimation();
 	}
 	resetAnimation() {
 		if(Math.abs(this.pitch) <= 0.01 && Math.random() <= 0.3) {
 			this.animation = {chill: Math.floor(Math.random() * 10) + 1};
-			this.speed = Math.floor(Math.random() * 4) + 1;
+			this.speed = Math.floor(Math.random() * 2) + 0.5;
 			return;
 		}
 

@@ -9,11 +9,11 @@ class Ground extends Mesh {
 	static Animals = [
 		{
 			albedo: vec3.fromValues(0.32, 0.16, 0.08),
-			model: new DeerModel(0.01)
+			model: new DeerModel(0.005)
 		},
 		{
 			albedo: vec3.fromValues(0.32, 0.30, 0.28),
-			model: new WolfModel(0.01)
+			model: new WolfModel(0.005)
 		}
 	];
 	static Trees = [
