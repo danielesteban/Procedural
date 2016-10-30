@@ -19,7 +19,6 @@ export const State = {
 };
 const resetState = () => {
 	const persist = [
-		'freezeTime',
 		'fastTime'
 	];
 	for(let id in State) !(~persist.indexOf(id)) && (State[id] = 0);
