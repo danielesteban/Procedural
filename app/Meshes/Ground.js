@@ -70,8 +70,8 @@ class Ground extends Mesh {
 	}
 	animate(delta, camera) {
 		const distance = vec3.distance(camera, this.origin);
-		this.renderAnimals = distance <= 260;
-		this.renderFlowers = distance <= 160;
+		this.renderAnimals = distance <= 250;
+		this.renderFlowers = distance <= 150;
 		this.renderAnimals && this.animals.forEach((mesh) => mesh.animate(delta));
 	}
 	destroy() {
