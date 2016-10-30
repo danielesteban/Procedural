@@ -69,14 +69,13 @@ class Animal extends Mesh {
 		Ammo.destroy(to);
 		Ammo.destroy(from);
 
-		const rotationStep = step * 0.5;
 		let tiltDiff = this.animation.tilt - this.tilt;
 		while(tiltDiff < -Math.PI) tiltDiff += Math.PI * 2;
 		while(tiltDiff > Math.PI) tiltDiff -= Math.PI * 2;
-		this.tilt += Math.min(Math.max(tiltDiff, -rotationStep * 2), rotationStep * 2);
+		this.tilt += Math.min(Math.max(tiltDiff, -step), step);
 		quat.rotateY(this.rotation, this.initialRotation, Math.PI * 0.5 - this.tilt);
 		const pitchDiff = Math.atan2(prevY - this.origin[1], step) - this.pitch;
-		this.pitch += Math.min(Math.max(pitchDiff, -rotationStep), rotationStep);
+		this.pitch += Math.min(Math.max(pitchDiff, step * -0.5), step * 0.5);
 		quat.rotateX(this.rotation, this.rotation, this.pitch);
 
 		mat4.fromRotationTranslationScale(this.transform, this.rotation, this.origin, this.model.scale);
