@@ -107,7 +107,7 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.flight ? 32 : (Input.run ? 12 : 6);
+		const speed = Input.flight ? 24 : (Input.run ? 12 : 6);
 		const step = speed * delta;
 
 		/* Keyboard */

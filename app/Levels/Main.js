@@ -4,7 +4,7 @@ import Mesh from 'Engine/Mesh';
 import {State as Input} from 'Engine/Input';
 import {Cloud, Ground} from 'Meshes';
 import {Ground as GroundModel} from 'Models';
-import {Cloud as CloudShader, Ground as GroundShader, Animal as AnimalShader, Skybox as SkyboxShader, Tree as TreeShader} from 'Shaders';
+import {Cloud as CloudShader, Ground as GroundShader, Animal as AnimalShader, Flower as FlowerShader, Tree as TreeShader, Skybox as SkyboxShader} from 'Shaders';
 import {glMatrix, vec2, vec3} from 'gl-matrix';
 import {Noise} from 'noisejs';
 
@@ -115,7 +115,7 @@ class Main extends Level {
 		/* Day/Night cycle */
 		this.time += delta * (Input.fastTime ? 100 : 10);
 		const sun = CalcSun(this.time);
-		CloudShader.modifier = GroundShader.modifier = AnimalShader.modifier = TreeShader.modifier = sun.intensity;
+		CloudShader.modifier = GroundShader.modifier = AnimalShader.modifier = FlowerShader.modifier = TreeShader.modifier = sun.intensity;
 		vec3.copy(SkyboxShader.sunPosition, sun.position);
 		vec3.copy(GroundShader.sunPosition, sun.position);
 		vec3.copy(AnimalShader.sunPosition, sun.position);

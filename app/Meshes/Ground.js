@@ -1,8 +1,8 @@
 import Mesh from 'Engine/Mesh';
-import {Ground as Model, Deer as DeerModel, Tree as TreeModel, Wolf as WolfModel} from 'Models';
+import {Ground as Model, Deer as DeerModel, Flower as FlowerModel, Tree as TreeModel, Wolf as WolfModel} from 'Models';
 import {Ground as Shader} from 'Shaders';
 import {Ground as Texture} from 'Textures';
-import {Animal, Tree} from 'Meshes';
+import {Animal, Flower, Tree} from 'Meshes';
 import {vec3} from 'gl-matrix';
 
 class Ground extends Mesh {
@@ -15,6 +15,9 @@ class Ground extends Mesh {
 			albedo: vec3.fromValues(0.32, 0.30, 0.28),
 			model: new WolfModel(0.006)
 		}
+	];
+	static Flowers = [
+		new FlowerModel()
 	];
 	static Trees = [
 		new TreeModel(1.5),
@@ -43,6 +46,13 @@ class Ground extends Mesh {
 			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * Ground.Trees.length)], spawn));
 		}
 
+		this.flowers = [];
+		for(let i=0; i<32; i++) {
+			const spawn = getSpawnPoint(2, 30);
+			if(!spawn) continue;
+			this.flowers.push(new Flower(Ground.Flowers[Math.floor(Math.random() * Ground.Flowers.length)], spawn));
+		}
+
 		this.animals = [];
 		const bounds = {
 			x: origin[0] - Model.size * 0.5 * Model.scale,
@@ -56,19 +66,22 @@ class Ground extends Mesh {
 		}
 	}
 	animate(delta, camera) {
-		if(this.renderAnimals = (vec3.distance(camera, this.origin) <= 320)) {
-			this.animals.forEach((mesh) => mesh.animate(delta));
-		}
+		const distance = vec3.distance(camera, this.origin);
+		this.renderAnimals = distance <= 260;
+		this.renderFlowers = distance <= 160;
+		this.renderAnimals && this.animals.forEach((mesh) => mesh.animate(delta));
 	}
 	destroy() {
 		super.destroy();
 		this.model.destroy();
-		this.trees.concat(this.animals).forEach((mesh) => mesh.destroy());
+		this.trees.concat(this.flowers).concat(this.animals).forEach((mesh) => mesh.destroy());
 	}
 	render(camera) {
 		super.render(camera);
-		if(this.renderAnimals) return this.trees.concat(this.animals);
-		return this.trees;
+		let post = [...this.trees];
+		this.renderAnimals && (post = post.concat(this.animals));
+		this.renderFlowers && (post = post.concat(this.flowers));
+		return post;
 	}
 };
 

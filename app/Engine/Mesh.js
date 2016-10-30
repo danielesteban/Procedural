@@ -120,11 +120,13 @@ class Mesh {
 		this.depthFunc && GL.depthFunc(this.depthFunc);
 		this.blending && GL.enable(GL.BLEND);
 		this.disableCulling && GL.disable(GL.CULL_FACE);
+		this.disableDepthMask && GL.depthMask(false);
 		if(this.model.points !== undefined) {
 			GL.drawArrays(GL.POINTS, 0, this.count || this.model.count);
 		} else {
 			GL.drawElements(GL.TRIANGLES, this.count || this.model.count, GL.UNSIGNED_SHORT, 0);
 		}
+		this.disableDepthMask && GL.depthMask(true);
 		this.disableCulling && GL.enable(GL.CULL_FACE);
 		this.blending && GL.disable(GL.BLEND);
 		this.depthFunc && GL.depthFunc(GL.LESS);

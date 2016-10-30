@@ -72,7 +72,7 @@ class ImageTexture extends Texture {
 		super(id);
 		const image = this.image = new Image();
 		image.onload = () => {
-			this.onLoad(image);
+			this.onLoad(image, null, true);
 		};
 		image.src = require('./' + id + '.png');
 	}
@@ -189,7 +189,9 @@ class AtlasTexture extends Texture {
 	}
 }
 
+export const Allium = new ImageTexture('Allium');
 export const Fur = new ImageTexture('Fur');
 export const Ground = new GroupTexture('Ground', 'Grass', 'Water');
+export const Tulip = new ImageTexture('Tulip');
 
 Loader = Loader();

@@ -53,16 +53,18 @@ class Shader {
 			texture: GL.getUniformLocation(this.program, "texture"),
 			secondaryTexture: GL.getUniformLocation(this.program, "secondaryTexture"),
 			cameraPosition: GL.getUniformLocation(this.program, "cameraPosition"),
-			cameraDirection: GL.getUniformLocation(this.program, "cameraDirection")
+			cameraDirection: GL.getUniformLocation(this.program, "cameraDirection"),
+			sunPosition: GL.getUniformLocation(this.program, "sunPosition")
 		};
 
 		uniforms && uniforms.forEach((uniform) => (this.uniforms[uniform] = GL.getUniformLocation(this.program, uniform)));
 	}
 }
 
-export const Animal = new Shader('Animal', null, null, ['sunPosition']);
+export const Animal = new Shader('Animal');
 export const Cloud = new Shader('Cloud');
-export const Ground = new Shader('Ground', null, null, ['sunPosition']);
-export const Skybox = new Shader('Skybox', null, null, ['sunPosition']);
+export const Flower = new Shader('Flower');
+export const Ground = new Shader('Ground');
+export const Skybox = new Shader('Skybox');
 export const Stars = new Shader('Stars');
-export const Tree = new Shader('Ground', 'Tree', null, ['sunPosition']);
+export const Tree = new Shader('Ground', 'Tree');

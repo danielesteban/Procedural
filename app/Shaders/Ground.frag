@@ -10,12 +10,12 @@ const vec3 stone = vec3(.64, .64, .48);
 const vec3 snow = vec3(.96, .96, .96);
 
 void main(void) {
-	vec3 color = vec3(texture2D(texture, vec2(fragPosition.x * 0.25, fragPosition.z * 0.25)));
+	vec3 color = vec3(texture2D(texture, vec2(fragPosition.x * 0.5, fragPosition.z * 0.5)));
 	float step;
 	if(fragPosition.y < 0.2) {
 		step = fragPosition.y / 0.2;
 		color *= sand * step;
-		color += mix(vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.125 + animation, fragPosition.z * 0.125 + animation))), vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.25 - animation, fragPosition.z * 0.25 - animation))), 0.5) * (1.0 - step);
+		color += mix(vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.25 + animation, fragPosition.z * 0.25 + animation))), vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.5 - animation, fragPosition.z * 0.5 - animation))), 0.5) * (1.0 - step);
 	} else if(fragPosition.y >= 0.2 && fragPosition.y < 1.0) {
 		step = (fragPosition.y - 0.2) / 0.8;
 		color *= sand * (1.0 - step) + grass * step;
