@@ -32,25 +32,28 @@ class Ground extends Mesh {
 		const getSpawnPoint = (minY, maxY) => {
 			const x = Math.floor(Math.random() * (Model.size + 1));
 			const z = Math.floor(Math.random() * (Model.size + 1));
-			const y = this.model.heightMap[x + ':' + z];
-			if(y < minY || y > maxY) return false;
-			const floor = vec3.fromValues((x - Model.size * 0.5) * Model.scale, y, (z - Model.size * 0.5) * Model.scale);
+			const p = this.model.heightMap[x + ':' + z];
+			if(p.height < minY || p.height > maxY) return false;
+			const floor = vec3.fromValues((x - Model.size * 0.5) * Model.scale, p.height, (z - Model.size * 0.5) * Model.scale);
 			vec3.add(floor, floor, origin);
-			return floor;
+			return {
+				origin: floor,
+				normal: p.normal
+			};
 		};
 
 		this.trees = [];
 		for(let i=0; i<2; i++) {
 			const spawn = getSpawnPoint(8, 40);
 			if(!spawn) continue;
-			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * Ground.Trees.length)], spawn));
+			this.trees.push(new Tree(Ground.Trees[Math.floor(Math.random() * Ground.Trees.length)], spawn.origin));
 		}
 
 		this.flowers = [];
 		for(let i=0; i<32; i++) {
 			const spawn = getSpawnPoint(2, 30);
 			if(!spawn) continue;
-			this.flowers.push(new Flower(Ground.Flowers[Math.floor(Math.random() * Ground.Flowers.length)], spawn));
+			this.flowers.push(new Flower(Ground.Flowers[Math.floor(Math.random() * Ground.Flowers.length)], spawn.origin, spawn.normal));
 		}
 
 		this.animals = [];
@@ -62,7 +65,7 @@ class Ground extends Mesh {
 		};
 		for(let i=0; i<3; i++) {
 			const spawn = getSpawnPoint(1, 16);
-			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * Ground.Animals.length)], spawn, world, bounds));
+			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * Ground.Animals.length)], spawn.origin, world, bounds));
 		}
 	}
 	animate(delta, camera) {

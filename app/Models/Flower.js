@@ -14,13 +14,33 @@ class Flower extends Model {
 			width,		height,			0,
 			-width,		height,			0,
 
+			width,		-height,		0,
+			-width,		-height,		0,
+			-width,		height,			0,
+			width,		height,			0,
+
 			0,		-height,		-width,
 			0,		-height,		width,
 			0,		height,			width,
-			0,		height,			-width
+			0,		height,			-width,
+
+			0,		-height,		width,
+			0,		-height,		-width,
+			0,		height,			-width,
+			0,		height,			width
 		]);
 
 		const uv = new Float32Array([
+			0,		uvH,
+			uvW,	uvH,
+			uvW,	0,
+			0,		0,
+
+			0,		uvH,
+			uvW,	uvH,
+			uvW,	0,
+			0,		0,
+
 			0,		uvH,
 			uvW,	uvH,
 			uvW,	0,
@@ -34,7 +54,9 @@ class Flower extends Model {
 
 		const indices = new Uint16Array([
 			0,1,2,			2,3,0,
-			4,5,6,			6,7,4
+			4,5,6,			6,7,4,
+			8,9,10,			10,11,8,
+			12,13,14,		14,15,12
 		]);
 
 		const bounds = {

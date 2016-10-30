@@ -1,10 +1,11 @@
+import {GL, UseShader} from 'Engine/Context';
 import Mesh from 'Engine/Mesh';
 import {Flower as Shader} from 'Shaders';
 import {Allium as AlliumTexture, Tulip as TulipTexture} from 'Textures';
 import {glMatrix, vec3, quat} from 'gl-matrix';
 
 class Flower extends Mesh {
-	constructor(model, origin) {
+	constructor(model, origin, normal) {
 		if(origin) {
 			origin[0] += (Math.floor(Math.random() * 3) - 1) * 0.2;
 			origin[1] += model.bounds.height * .5;
@@ -14,7 +15,13 @@ class Flower extends Mesh {
 		quat.rotateX(rotation, rotation, glMatrix.toRadian(Math.floor(Math.random() * 31) - 15));
 		quat.rotateZ(rotation, rotation, glMatrix.toRadian(Math.floor(Math.random() * 31) - 15));
 		super(model, Shader, origin, rotation, null, Math.random() >= 0.5 ? AlliumTexture : TulipTexture);
-		this.blending = this.disableCulling = this.disableDepthMask = true;
+		this.blending = this.disableDepthMask = true;
+		this.groundNormal = normal;
+	}
+	render(camera) {
+		UseShader(this.shader);
+		GL.uniform3fv(this.shader.uniforms.groundNormal, this.groundNormal);
+		super.render(camera);
 	}
 };
 

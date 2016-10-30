@@ -11,11 +11,8 @@ const canvas = cE('canvas');
 aC(document.body, canvas);
 export const GL = canvas.getContext('webgl', hints) || canvas.getContext('experimental-webgl', hints);
 GL.enable(GL.DEPTH_TEST);
-GL.depthFunc(GL.LESS);
 GL.enable(GL.CULL_FACE);
-GL.cullFace(GL.BACK);
-GL.blendFuncSeparate(GL.SRC_ALPHA, GL.ONE_MINUS_SRC_ALPHA, GL.ONE, GL.ONE_MINUS_SRC_ALPHA);
-GL.blendEquation(GL.FUNC_ADD);
+GL.blendFunc(GL.ONE, GL.ONE_MINUS_SRC_ALPHA);
 export const Anisotropic = GL.getExtension('EXT_texture_filter_anisotropic') || GL.getExtension('WEBKIT_EXT_texture_filter_anisotropic') || GL.getExtension('MOZ_EXT_texture_filter_anisotropic');
 export const Derivatives = GL.getExtension('OES_standard_derivatives');
 

@@ -63,7 +63,7 @@ class Shader {
 
 export const Animal = new Shader('Animal');
 export const Cloud = new Shader('Cloud');
-export const Flower = new Shader('Flower');
+export const Flower = new Shader('Flower', null, null, ['groundNormal']);
 export const Ground = new Shader('Ground');
 export const Skybox = new Shader('Skybox');
 export const Stars = new Shader('Stars');

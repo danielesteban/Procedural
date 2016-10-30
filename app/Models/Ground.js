@@ -36,8 +36,9 @@ class Ground extends Model {
 		for(let x=0;x<=Ground.size;x++) {
 			const v = getVertex(x, z);
 			position[vertex++] = v[0];
-			heightMap[x + ':' + z] = position[vertex++] = v[1];
+			position[vertex++] = v[1];
 			position[vertex++] = v[2];
+			heightMap[x + ':' + z] = {height: v[1]};
 		}
 
 		let index = 0;
@@ -131,6 +132,7 @@ class Ground extends Model {
 			normal[i * 3] = sum[0];
 			normal[i * 3 + 1] = sum[1];
 			normal[i * 3 + 2] = sum[2];
+			heightMap[i % (Ground.size + 1) + ':' + Math.floor(i / (Ground.size + 1))].normal = sum;
 		});
 
 		const bounds = {

@@ -113,16 +113,30 @@ class Level {
 			}));
 
 			/* Render the post layer */
-			for(let j=0; j<2; j++) {
-				postLayer.forEach((layer) => layer.forEach((mesh) => {
-					if((j === 0 && !mesh.blending) || (j === 1 && mesh.blending)) {
-						loaded++;
-						if(!this.camera.inFustrum(mesh)) return;
-						mesh.render(camera);
-						rendered++;
-					}
-				}));
-			}
+			const blending = [];
+			postLayer.forEach((layer) => layer.forEach((mesh) => {
+				if(mesh.blending) {
+					return blending.push({
+						distance: vec3.distance(camera.translation, mesh.origin),
+						mesh
+					});
+				}
+				loaded++;
+				if(!this.camera.inFustrum(mesh)) return;
+				mesh.render(camera);
+				rendered++;
+			}));
+			/* Sort the blending layer */
+			blending.sort((a, b) => {
+				return b.distance - a.distance;
+			});
+			/* Render blending layer */
+			blending.forEach(({mesh}) => {
+				loaded++;
+				if(!this.camera.inFustrum(mesh)) return;
+				mesh.render(camera);
+				rendered++;
+			});
 		});
 
 		/* Take screenshot (if requested) */

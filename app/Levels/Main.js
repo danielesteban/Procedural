@@ -104,6 +104,7 @@ class Main extends Level {
 		SkyboxShader.sunPosition = vec3.create();
 		GroundShader.sunPosition = vec3.create();
 		AnimalShader.sunPosition = vec3.create();
+		FlowerShader.sunPosition = vec3.create();
 		TreeShader.sunPosition = vec3.create();
 		this.time = 0;
 
@@ -119,6 +120,7 @@ class Main extends Level {
 		vec3.copy(SkyboxShader.sunPosition, sun.position);
 		vec3.copy(GroundShader.sunPosition, sun.position);
 		vec3.copy(AnimalShader.sunPosition, sun.position);
+		vec3.copy(FlowerShader.sunPosition, sun.position);
 		vec3.copy(TreeShader.sunPosition, sun.position);
 		this.stars.modifier = sun.intensity <= 0.25 ? (1 - sun.intensity * 4) : 0;
 
