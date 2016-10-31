@@ -1,4 +1,5 @@
 import {cE, aC, aE, tN} from './DOM';
+import Music from './Music';
 import i18n from 'i18n';
 
 /* Global input state */
@@ -164,7 +165,7 @@ aE(window, 'keyup', onKey);
 
 /* Settings Menu */
 const settings = cE('settings');
-['antialias', 'highDPI', 'debug', 'fullscreen'].forEach((setting) => {
+['antialias', 'highDPI', 'debug', 'mute', 'fullscreen'].forEach((setting) => {
 	if(setting === 'highDPI' && (window.devicePixelRatio || 1) < 2) return;
 	if(setting === 'fullscreen' && electron) return;
 	const input = cE('input', {
@@ -173,7 +174,9 @@ const settings = cE('settings');
 		onchange: () => {
 			if(input.checked) localStorage.setItem(setting, 1);
 			else localStorage.removeItem(setting);
-			if(setting === 'fullscreen') {
+			if(setting === 'mute') {
+				Music.toggle();
+			} else if(setting === 'fullscreen') {
 				(autoFullscreen = input.checked) && !isFullScreen && requestFullScreen();
 			} else window.location.reload();
 		}

@@ -111,7 +111,7 @@ class Main extends Level {
 
 		GroundShader.animation = 0;
 
-		Music.play();
+		!localStorage.mute && Music.play();
 	}
 	destroy() {
 		super.destroy();

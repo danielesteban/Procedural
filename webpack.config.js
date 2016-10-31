@@ -8,11 +8,13 @@ const buildPath = path.resolve(__dirname, 'build');
 const modulesPath = path.resolve(__dirname, 'node_modules');
 const childProcess = require('child_process');
 const commitCount = parseInt(childProcess.execSync('git rev-list HEAD --count').toString(), 10);
+const fs = require('fs');
 const production = process.env.NODE_ENV === 'production';
 
 const bundle = function(app) {
 	const appPath = path.resolve(__dirname, app.source);
 	const publicPath = '/' + (production ? 'procedural/' : '');
+	const trackCount = fs.readdirSync(path.join(appPath, 'Music')).filter(function(file) {return file.substr(file.length - 4) === '.ogg'}).length;
 	return {
 	 name: app.name,
 	 entry: (app.modules || []).concat([
@@ -89,7 +91,8 @@ const bundle = function(app) {
 				 NODE_ENV: JSON.stringify(production ? "production" : "development")
 			 },
 			 BASENAME: JSON.stringify(publicPath),
-			 VERSION: JSON.stringify('v0.' + Math.floor(commitCount / 10) + '.' + (commitCount % 10))
+			 VERSION: JSON.stringify('v0.' + Math.floor(commitCount / 10) + '.' + (commitCount % 10)),
+			 MUSIC_TRACKS: trackCount
 		 }),
 		 new ExtractTextPlugin((app.path || '') + (production ? '[hash].css' : 'bundle.css'), {
 			 allChunks: true

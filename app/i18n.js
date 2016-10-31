@@ -7,6 +7,7 @@ const locales = {
 		fullscreen: 'Full-Screen',
 		highDPI: 'High DPI',
 		inventory: 'Inventory',
+		mute: 'Mute audio',
 		ok: 'OK',
 		renderedMeshes: '{rendered}/{loaded} meshes',
 		worksBetterWithChrome: 'Works better with Chrome'
