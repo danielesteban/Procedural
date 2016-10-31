@@ -63,8 +63,8 @@ class Shader {
 
 export const Animal = new Shader('Animal');
 export const Cloud = new Shader('Cloud');
-export const Flower = new Shader('Flower', null, null, ['groundNormal']);
-export const Ground = new Shader('Ground');
+export const Flower = new Shader('Flower', null, null, ['textureAllium', 'textureTulip', 'groundNormal']);
+export const Ground = new Shader('Ground', null, null, ['textureWater', 'textureSand', 'textureGrass', 'textureStone', 'textureSnow']);
 export const Skybox = new Shader('Skybox');
 export const Stars = new Shader('Stars');
 export const Tree = new Shader('Ground', 'Tree');

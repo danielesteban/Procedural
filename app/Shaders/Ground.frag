@@ -1,37 +1,41 @@
 @import ./Lighting;
 
-uniform sampler2D texture;
-uniform sampler2D secondaryTexture;
+uniform sampler2D textureWater;
+uniform sampler2D textureSand;
+uniform sampler2D textureGrass;
+uniform sampler2D textureStone;
+uniform sampler2D textureSnow;
 
-const vec3 sand = vec3(.96, .64, .38);
 const vec3 grass = vec3(.16, .32, .16);
 const vec3 dirt = vec3(.32, .32, .16);
-const vec3 stone = vec3(.64, .64, .48);
-const vec3 snow = vec3(.96, .96, .96);
 
 void main(void) {
-	vec3 color = vec3(texture2D(texture, vec2(fragPosition.x * 0.5, fragPosition.z * 0.5)));
+	vec2 fragUV = vec2(fragPosition.x * 0.5, fragPosition.z * 0.5);
+	vec3 color;
 	float step;
 	if(fragPosition.y < 0.2) {
 		step = fragPosition.y / 0.2;
-		color *= sand * step;
-		color += mix(vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.25 + animation, fragPosition.z * 0.25 + animation))), vec3(texture2D(secondaryTexture, vec2(fragPosition.x * 0.5 - animation, fragPosition.z * 0.5 - animation))), 0.5) * (1.0 - step);
+		color = vec3(texture2D(textureSand, fragUV)) * step;
+		color += mix(vec3(texture2D(textureWater, vec2(fragPosition.x * 0.25 + animation, fragPosition.z * 0.25 + animation))), vec3(texture2D(textureWater, vec2(fragPosition.x * 0.5 - animation, fragPosition.z * 0.5 - animation))), 0.5) * (1.0 - step);
 	} else if(fragPosition.y >= 0.2 && fragPosition.y < 1.0) {
 		step = (fragPosition.y - 0.2) / 0.8;
-		color *= sand * (1.0 - step) + grass * step;
+		color = vec3(texture2D(textureSand, fragUV)) * (1.0 - step);
+		color += vec3(texture2D(textureGrass, fragUV)) * grass * step;
 	} else if(fragPosition.y >= 1.0 && fragPosition.y < 16.0) {
-		color *= grass;
-	} else if(fragPosition.y >= 16.0 && fragPosition.y < 32.0) {
-		step = (fragPosition.y - 16.0) / 16.0;
-		color *= grass * (1.0 - step) + dirt * step;
-	} else if(fragPosition.y >= 32.0 && fragPosition.y < 64.0) {
-		step = (fragPosition.y - 32.0) / 32.0;
-		color *= dirt * (1.0 - step) + stone * step;
-	} else if(fragPosition.y >= 64.0 && fragPosition.y < 96.0) {
-		step = (fragPosition.y - 64.0) / 32.0;
-		color *= stone * (1.0 - step) + snow * step;
+		color = vec3(texture2D(textureGrass, fragUV)) * grass;
+	} else if(fragPosition.y >= 16.0 && fragPosition.y < 48.0) {
+		step = (fragPosition.y - 16.0) / 32.0;
+		color = vec3(texture2D(textureGrass, fragUV)) * (grass * (1.0 - step) + dirt * step);
+	} else if(fragPosition.y >= 48.0 && fragPosition.y < 80.0) {
+		step = (fragPosition.y - 48.0) / 32.0;
+		color = vec3(texture2D(textureGrass, fragUV)) * dirt * (1.0 - step);
+		color += vec3(texture2D(textureStone, fragUV)) * step;
+	} else if(fragPosition.y >= 80.0 && fragPosition.y < 112.0) {
+		step = (fragPosition.y - 80.0) / 32.0;
+		color = vec3(texture2D(textureStone, fragUV)) * (1.0 - step);
+		color += vec3(texture2D(textureSnow, fragUV)) * step;
 	} else {
-		color *= snow;
+		color = vec3(texture2D(textureSnow, fragUV));
 	}
 
 	gl_FragColor = vec4(color * sunLight(), 1.0);

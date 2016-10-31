@@ -135,14 +135,11 @@ export const BindTexture = (texture) => {
 	if(currentTexture === texture) return;
 	currentTexture = texture;
 	if(!texture) return;
-	GL.activeTexture(GL.TEXTURE0);
-	GL.bindTexture(texture.cubemap ? GL.TEXTURE_CUBE_MAP : GL.TEXTURE_2D, texture.buffer);
-	GL.uniform1i(currentShader.uniforms.texture, 0);
-	if(texture.secondary) {
-		GL.activeTexture(GL.TEXTURE1);
-		GL.bindTexture(GL.TEXTURE_2D, texture.secondary);
-		GL.uniform1i(currentShader.uniforms.secondaryTexture, 1);
-	}
+	texture.buffers.forEach((buffer, i) => {
+		GL.activeTexture(GL['TEXTURE' + i]);
+		GL.bindTexture(GL.TEXTURE_2D, buffer);
+		GL.uniform1i(currentShader.uniforms['texture' + (texture.buffers.length > 1 ? texture.textures[i] : '')], i);
+	});
 };
 
 /* Context resize event & handler */
