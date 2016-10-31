@@ -34,18 +34,21 @@ class Ground extends Mesh {
 			const z = Math.floor(Math.random() * (Model.size - 1)) + 1;
 			const p = this.model.heightMap[x + ':' + z];
 			if(p.height < minY || p.height > maxY) return false;
-			const offsetX = (Math.floor(Math.random() * 3) - 1) * 0.2;
-			const offsetZ = (Math.floor(Math.random() * 3) - 1) * 0.2;
+			const offsetX = (Math.random() * 0.2 + 0.05) * (Math.random() >= 0.5 ? 1 : -1);
+			const offsetZ = (Math.random() * 0.2 + 0.05) * (Math.random() >= 0.5 ? 1 : -1);
 			const normal = vec3.clone(p.normal);
 			let height = p.height;
 			const pX = this.model.heightMap[Math.round(x + offsetX) + ':' + z];
 			vec3.add(normal, normal, pX.normal);
-			height += pX.height * Math.abs(offsetX);
+			height += pX.height;
 			const pZ = this.model.heightMap[x + ':' + Math.round(z + offsetZ)];
 			vec3.add(normal, normal, pZ.normal);
-			height += pZ.height * Math.abs(offsetZ);
+			height += pZ.height;
+			const offsetP = this.model.heightMap[Math.round(x + offsetX) + ':' + Math.round(z + offsetZ)];
+			vec3.add(normal, normal, offsetP.normal);
+			height += offsetP.height;
 			vec3.normalize(normal, normal);
-			height /= 1 + Math.abs(offsetX) + Math.abs(offsetZ);
+			height /= 4;
 			const spawn = vec3.fromValues((x + offsetX - Model.size * 0.5) * Model.scale, height, (z + offsetZ - Model.size * 0.5) * Model.scale);
 			vec3.add(spawn, spawn, origin);
 			return {
