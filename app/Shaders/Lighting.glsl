@@ -15,5 +15,5 @@ float sunLight() {
 	vec3 halfwayDir = normalize(direction + viewDirection);
 	float specular = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
-	return max(0.2, (diffuse + min(diffuse, specular)) * modifier);
+	return max(0.1, (diffuse + min(diffuse, specular)) * modifier);
 }
