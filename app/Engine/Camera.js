@@ -107,7 +107,7 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.flight ? 24 : (Input.run ? 12 : 6);
+		const speed = Input.flight ? 16 : (Input.run ? 12 : 6);
 		const step = speed * delta;
 
 		/* Keyboard */
@@ -123,7 +123,7 @@ class Camera {
 
 		/* Pull to floor level */
 		const floorY = this.getFloorY();
-		const floorDiff = (floorY + (Input.flight ? 8 : 0)) - this.position[1];
+		const floorDiff = (floorY + (Input.flight ? 6 : 0)) - this.position[1];
 		if(Math.abs(floorDiff) > 0.0001) {
 			this.position[1] += Math.min(Math.max(floorDiff, -step), floorY > this.position[1] + (Input.flight ? step * 4 : 0) ? floorDiff : step * 0.6);
 			updatePos = true;
