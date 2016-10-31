@@ -67,6 +67,15 @@ const bundle = function(app) {
 				 query: {
 					 name: 'textures/' + (production ? '[hash].[ext]' : '[name].[ext]')
 				 }
+			 },
+			 {
+				 test: /\.ogg$/,
+				 loader: 'file',
+				 include: appPath,
+				 exclude: modulesPath,
+				 query: {
+					 name: 'music/' + (production ? '[hash].[ext]' : '[name].[ext]')
+				 }
 			 }
 		 ]
 	 },

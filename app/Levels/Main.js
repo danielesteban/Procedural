@@ -1,6 +1,7 @@
 import {Debug} from 'Engine/Context';
 import Level from 'Engine/Level';
 import Mesh from 'Engine/Mesh';
+import Music from 'Engine/Music';
 import {State as Input} from 'Engine/Input';
 import {Cloud, Ground} from 'Meshes';
 import {Ground as GroundModel} from 'Models';
@@ -109,6 +110,12 @@ class Main extends Level {
 		this.time = 0;
 
 		GroundShader.animation = 0;
+
+		Music.play();
+	}
+	destroy() {
+		super.destroy();
+		Music.reset();
 	}
 	animate(delta) {
 		super.animate(delta);

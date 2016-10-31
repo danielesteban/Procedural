@@ -1,4 +1,5 @@
 .DS_Store
+app/Music/
 backups/
 build/
 chunks/
