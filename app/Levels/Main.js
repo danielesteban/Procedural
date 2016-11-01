@@ -42,12 +42,12 @@ const CalcSun = (function() {
 		DAY_MS = 1000 * 60 * 60 * 24,
 		lat = glMatrix.toRadian(40.4381307),
 		lng = glMatrix.toRadian(-3.819966),
-		date = new Date(2016, 5, 20, 6);
+		date = new Date(Date.UTC(2016, 5, 20));
 
 	return function(accumulator) {
 		const time = accumulator % 1080;
-		date.setHours(6 + (time / 60));
-		date.setMinutes(time % 60);
+		date.setUTCHours(4 + (time / 60));
+		date.setUTCMinutes(time % 60);
 
 		const julianDate = date.getTime() / DAY_MS - 0.5 + J1970,
 			solarMeanAnomaly = M0 + M1 * (julianDate - J2000),
@@ -142,8 +142,8 @@ class Main extends Level {
 		Music.reset();
 	}
 	getTime(date) {
-		const hours = date.getHours();
-		const minutes = date.getMinutes();
+		const hours = date.getUTCHours() + 2;
+		const minutes = date.getUTCMinutes();
 		return (hours < 10 ? '0' : '') + (hours > 12 ? hours % 12 : hours) + ':' + (minutes < 10 ? '0' : '') + minutes + (hours > 12 ? 'PM' : 'AM');
 	}
 	processQueue(iteration) {
