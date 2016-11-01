@@ -54,7 +54,7 @@ class Camera {
 		this.updateVectors();
 
 		this.level = level;
-		// Input.flight = true;
+		Input.flight = true;
 	}
 	destroy() {
 		window.removeEventListener(ResizeEvent, this.onResize);
