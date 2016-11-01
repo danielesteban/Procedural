@@ -20,7 +20,7 @@ void main(void) {
 	vec3 blur = vec3(texture2D(textureBlur, fragUV));
 	float depth = texture2D(textureDepth, fragUV).r;
 	float z = linearDepth(depth);
-	float density = modifier * 0.005;
+	float density = modifier * 0.006;
 	float factor = clamp(exp2(-density * density * z * z * LOG2), 0.0, 1.0);
 	gl_FragColor = vec4(mix(blur, color, factor), 1.0);
 }
