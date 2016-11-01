@@ -1,3 +1,5 @@
+precision mediump float;
+
 attribute vec3 position;
 uniform mat4 transform;
 

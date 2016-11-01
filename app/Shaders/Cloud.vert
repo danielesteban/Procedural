@@ -1,3 +1,5 @@
+precision mediump float;
+
 attribute vec3 position;
 attribute vec3 color;
 varying vec3 fragColor;

@@ -1,3 +1,5 @@
+precision mediump float;
+
 attribute vec3 position;
 varying vec3 fragPosition;
 uniform mat4 transform;

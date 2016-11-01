@@ -1,3 +1,5 @@
+precision mediump float;
+
 attribute vec3 position;
 attribute vec2 uv;
 varying vec3 fragNormal;

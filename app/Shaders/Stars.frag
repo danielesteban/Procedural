@@ -1,4 +1,5 @@
-precision highp float;
+precision mediump float;
+
 varying float fragAlpha;
 uniform float modifier;
 

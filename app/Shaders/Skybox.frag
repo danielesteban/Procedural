@@ -1,4 +1,5 @@
-precision highp float;
+precision mediump float;
+
 varying vec3 fragPosition;
 uniform vec3 sunPosition;
 

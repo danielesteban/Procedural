@@ -1,4 +1,5 @@
-precision highp float;
+precision mediump float;
+
 varying vec3 fragColor;
 uniform float modifier;
 
