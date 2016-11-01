@@ -12,7 +12,7 @@ const float zFar = 2000.0;
 const float LOG2 = 1.442695;
 
 float linearDepth(float depth) {
-  return 2.0 * zNear * zFar / (zFar + zNear - (2.0 * depth - 1.0) * (zFar - zNear));
+	return 2.0 * zNear * zFar / (zFar + zNear - (2.0 * depth - 1.0) * (zFar - zNear));
 }
 
 void main(void) {
