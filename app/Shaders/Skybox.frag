@@ -2,7 +2,6 @@ precision highp float;
 varying vec3 fragPosition;
 uniform vec3 sunPosition;
 
-const float luminance = 1.0;
 const float turbidity = 10.0;
 const float reileigh = 2.0;
 const float mieCoefficient = 0.005;
@@ -125,13 +124,7 @@ void main(void) {
 	texColor *= 0.04 ;
 	texColor += vec3(0.0,0.001,0.0025)*0.3;
 
-	float g_fMaxLuminance = 1.0;
-	float fLumScaled = 0.1 / luminance;
-	float fLumCompressed = (fLumScaled * (1.0 + (fLumScaled / (g_fMaxLuminance * g_fMaxLuminance)))) / (1.0 + fLumScaled);
-
-	float ExposureBias = fLumCompressed;
-
-	vec3 curr = Uncharted2Tonemap((log2(2.0/pow(luminance,4.0)))*texColor);
+	vec3 curr = Uncharted2Tonemap(texColor);
 	vec3 color = curr*whiteScale;
 
 	vec3 retColor = pow(color,vec3(1.0/(1.2+(1.2*sunfade))));

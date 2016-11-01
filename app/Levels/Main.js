@@ -240,6 +240,7 @@ class Main extends Level {
 		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 		super.render();
 
+		GL.viewport(0, 0, this.postprocessing.framebuffer.buffer.width, this.postprocessing.framebuffer.buffer.height);
 		GL.disable(GL.DEPTH_TEST);
 
 		/* Render blur texture */
