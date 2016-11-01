@@ -46,7 +46,7 @@ const CalcSun = (function() {
 
 	return function(accumulator) {
 		const time = accumulator % 1080;
-		date.setUTCHours(4 + (time / 60));
+		date.setUTCHours(3 + (time / 60));
 		date.setUTCMinutes(time % 60);
 
 		const julianDate = date.getTime() / DAY_MS - 0.5 + J1970,
@@ -142,7 +142,7 @@ class Main extends Level {
 		Music.reset();
 	}
 	getTime(date) {
-		const hours = date.getUTCHours() + 2;
+		const hours = date.getUTCHours() + 3;
 		const minutes = date.getUTCMinutes();
 		return (hours < 10 ? '0' : '') + (hours > 12 ? hours % 12 : hours) + ':' + (minutes < 10 ? '0' : '') + minutes + (hours > 12 ? 'PM' : 'AM');
 	}
