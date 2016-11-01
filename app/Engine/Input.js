@@ -21,7 +21,6 @@ export const State = {
 };
 const resetState = () => {
 	const persist = [
-		'run',
 		'flight',
 		'fastTime'
 	];
