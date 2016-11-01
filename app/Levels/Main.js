@@ -120,6 +120,7 @@ class Main extends Level {
 				mesh: new FrameBufferMesh()
 			};
 			PostProcessingShader.animation = 0;
+			PostProcessingShader.nightVision = 0;
 			this.onResize = this.onResize.bind(this);
 			window.addEventListener(ResizeEvent, this.onResize);
 			this.onResize();
@@ -185,6 +186,12 @@ class Main extends Level {
 
 		if(this.postprocessing) {
 			PostProcessingShader.animation += delta;
+			if(Input.nightVision && PostProcessingShader.nightVision < 1.0) {
+				PostProcessingShader.nightVision += Math.min(1.0 - PostProcessingShader.nightVision, delta);
+			}
+			if(!Input.nightVision && PostProcessingShader.nightVision > 0.0) {
+				PostProcessingShader.nightVision -= Math.min(PostProcessingShader.nightVision, delta * 4.0);
+			}
 		}
 
 		/* Test if we are in a new chunk */
@@ -297,7 +304,7 @@ class Main extends Level {
 				buffer: FurTexture.buffers[0]
 			}
 		], PostProcessingShader, () => {
-			GL.uniform1f(PostProcessingShader.uniforms.nightVision, Input.nightVision ? 1 : 0);
+			GL.uniform1f(PostProcessingShader.uniforms.nightVision, PostProcessingShader.nightVision);
 		});
 		GL.bindTexture(GL.TEXTURE_2D, null);
 
