@@ -42,8 +42,8 @@ void main(void) {
 		composite = (composite + (noise*0.2)) * vec3(0.1, 0.95, 0.2);
 		float distL = distance(vec2(fragUV.s * 2.0, fragUV.t), vec2(0.5, 0.5));
 		float distR = distance(vec2(fragUV.s * 2.0, fragUV.t), vec2(1.5, 0.5));
-		const float inner = 0.38;
-		const float outer = 0.45;
+		const float inner = 0.40;
+		const float outer = 0.46;
 		composite *= smoothstep(outer, inner, distL) + smoothstep(outer, inner, distR);
 	}
 
