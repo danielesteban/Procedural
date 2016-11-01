@@ -4,6 +4,7 @@ varying vec2 fragUV;
 uniform sampler2D textureBlur;
 uniform sampler2D textureColor;
 uniform sampler2D textureDepth;
+uniform float modifier;
 
 const float zNear = 0.1;
 const float zFar = 2000.0;
@@ -13,13 +14,13 @@ float linearDepth(float depth) {
 }
 
 const float LOG2 = 1.442695;
-const float DENSITY = 0.01;
 
 void main(void) {
 	vec4 color = texture2D(textureColor, fragUV);
 	vec4 blur = texture2D(textureBlur, fragUV);
 	float depth = texture2D(textureDepth, fragUV).r;
 	float z = linearDepth(depth);
-	float factor = clamp(exp2(-DENSITY * DENSITY * z * z * LOG2), 0.0, 1.0);
+	float density = modifier * 0.01;
+	float factor = clamp(exp2(-density * density * z * z * LOG2), 0.0, 1.0);
 	gl_FragColor = mix(blur, color, factor);
 }
