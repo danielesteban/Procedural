@@ -7,6 +7,7 @@ import {State as Input} from 'Engine/Input';
 import {Cloud, Ground, FrameBuffer as FrameBufferMesh} from 'Meshes';
 import {Ground as GroundModel} from 'Models';
 import {Blur as BlurShader, Cloud as CloudShader, Depth as DepthShader, Ground as GroundShader, Animal as AnimalShader, Flower as FlowerShader, PostProcessing as PostProcessingShader, Tree as TreeShader, Skybox as SkyboxShader} from 'Shaders';
+import {Fur as FurTexture} from 'Textures';
 import {glMatrix, vec2, vec3} from 'gl-matrix';
 import {Noise} from 'noisejs';
 
@@ -110,18 +111,19 @@ class Main extends Level {
 		TreeShader.sunPosition = vec3.create();
 		this.time = 0;
 
+		GroundShader.animation = 0;
+		!localStorage.mute && Music.play();
+
 		/* Post-Processing */
 		if(localStorage.postprocessing) {
 			this.postprocessing = {
 				mesh: new FrameBufferMesh()
 			};
+			PostProcessingShader.animation = 0;
 			this.onResize = this.onResize.bind(this);
 			window.addEventListener(ResizeEvent, this.onResize);
 			this.onResize();
 		}
-
-		GroundShader.animation = 0;
-		!localStorage.mute && Music.play();
 	}
 	onResize() {
 		/* Post-Processing */
@@ -160,7 +162,7 @@ class Main extends Level {
 		super.animate(delta);
 
 		/* Day/Night cycle */
-		this.time += delta * (Input.fastTime ? 100 : 10);
+		this.time += delta * (Input.fastTime ? 100 : 2);
 		const sun = CalcSun(this.time);
 		CloudShader.modifier = GroundShader.modifier = AnimalShader.modifier = FlowerShader.modifier = PostProcessingShader.modifier = TreeShader.modifier = sun.intensity;
 		vec3.copy(SkyboxShader.sunPosition, sun.position);
@@ -180,6 +182,10 @@ class Main extends Level {
 
 		/* Water */
 		(GroundShader.animation += delta * 0.1) > 1.0 && (GroundShader.animation %= 1);
+
+		if(this.postprocessing) {
+			PostProcessingShader.animation += delta;
+		}
 
 		/* Test if we are in a new chunk */
 		const currentChunk = vec2.fromValues(
@@ -285,8 +291,14 @@ class Main extends Level {
 			{
 				id: 'Depth',
 				buffer: this.postprocessing.depthbuffer.depth
+			},
+			{
+				id: 'Noise',
+				buffer: FurTexture.buffers[0]
 			}
-		], PostProcessingShader);
+		], PostProcessingShader, () => {
+			GL.uniform1f(PostProcessingShader.uniforms.nightVision, Input.nightVision ? 1 : 0);
+		});
 		GL.bindTexture(GL.TEXTURE_2D, null);
 
 		GL.enable(GL.DEPTH_TEST);

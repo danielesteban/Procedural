@@ -17,12 +17,14 @@ export const State = {
 	run: 0,
 	flight: 0,
 	fastTime: 0,
+	nightVision: 0,
 	screenshot: 0
 };
 const resetState = () => {
 	const persist = [
 		'flight',
-		'fastTime'
+		'fastTime',
+		'nightVision'
 	];
 	for(let id in State) !(~persist.indexOf(id)) && (State[id] = 0);
 };
@@ -151,6 +153,11 @@ const onKey = (e) => {
 		case 79:
 			if(state) {
 				State.fastTime = !State.fastTime;
+			}
+		break;
+		case 70:
+			if(state) {
+				State.nightVision = !State.nightVision;
 			}
 		break;
 		case 80:
