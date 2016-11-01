@@ -1,6 +1,7 @@
 export Cloud from './Cloud';
 export Deer from './Deer';
 export Flower from './Flower';
+export FrameBuffer from './FrameBuffer';
 export Ground from './Ground';
 export PointCloud from './PointCloud';
 export Skybox from './Skybox';

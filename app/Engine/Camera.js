@@ -54,7 +54,7 @@ class Camera {
 		this.updateVectors();
 
 		this.level = level;
-		Input.flight = true;
+		// Input.flight = true;
 	}
 	destroy() {
 		window.removeEventListener(ResizeEvent, this.onResize);
@@ -66,7 +66,7 @@ class Camera {
 	setAspect(aspect) {
 		this.aspect = aspect;
 		/* Camera projection */
-		mat4.perspective(this.projection, this.fov, this.aspect, 0.01, 2000);
+		mat4.perspective(this.projection, this.fov, this.aspect, 0.1, 2000);
 	}
 	updateVectors() {
 		const lookAt = vec3.fromValues(

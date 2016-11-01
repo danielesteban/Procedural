@@ -13,7 +13,8 @@ class Skybox extends Mesh {
 		super.destroy();
 		this.model.destroy();
 	}
-	render(camera) {
+	render(camera, shader) {
+		if(shader) return;
 		mat4.fromTranslation(this.transform, camera.translation);
 		super.render(camera);
 	}

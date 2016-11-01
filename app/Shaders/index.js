@@ -62,9 +62,12 @@ class Shader {
 }
 
 export const Animal = new Shader('Animal');
+export const Blur = new Shader('PostProcessing', 'Blur', null, ['textureColor', 'resolution', 'direction']);
 export const Cloud = new Shader('Cloud');
+export const Depth = new Shader('Depth');
 export const Flower = new Shader('Flower', null, null, ['textureAllium', 'textureTulip', 'groundNormal']);
 export const Ground = new Shader('Ground', null, null, ['textureWater', 'textureSand', 'textureGrass', 'textureStone', 'textureSnow']);
+export const PostProcessing = new Shader('PostProcessing', null, null, ['textureBlur', 'textureColor', 'textureDepth']);
 export const Skybox = new Shader('Skybox');
 export const Stars = new Shader('Stars');
 export const Tree = new Shader('Ground', 'Tree');

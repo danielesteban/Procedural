@@ -24,7 +24,8 @@ class Stars extends Mesh {
 		if(this.animation.angle >= 360) this.animation.angle -= 360;
 		quat.setAxisAngle(quat.identity(this.rotation), this.animation.vector, glMatrix.toRadian(this.animation.angle));
 	}
-	render(camera) {
+	render(camera, shader) {
+		if(shader) return;
 		if(this.modifier === 0) return;
 		mat4.fromRotationTranslation(this.transform, this.rotation, camera.translation);
 		super.render(camera);

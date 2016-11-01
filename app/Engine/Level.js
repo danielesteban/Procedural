@@ -1,4 +1,4 @@
-import {GL, BindModel, BindTexture, UseShader, Debug, Screenshot} from './Context';
+import {GL, BindModel, BindTexture, Debug, Screenshot, UseShader} from './Context';
 import {State as Input} from './Input';
 import Camera from './Camera';
 import Mesh from './Mesh';
@@ -65,7 +65,7 @@ class Level {
 		/* Process input */
 		this.camera.processInput(delta);
 	}
-	render() {
+	render(shader) {
 		const cameras = [];
 		if(this.camera.VRDisplay) {
 			const eyePosition = vec3.create();
@@ -102,12 +102,13 @@ class Level {
 		let loaded = 0;
 		cameras.forEach((camera) => {
 			GL.viewport(camera.viewport.x, camera.viewport.y, camera.viewport.w, camera.viewport.h);
+
 			/* Render all the meshes */
 			const postLayer = [];
 			this.layers.forEach((layer) => layer.forEach((mesh, i) => {
 				loaded++;
 				if(!this.camera.inFustrum(mesh)) return;
-				const post = mesh.render(camera);
+				const post = mesh.render(camera, shader);
 				post && postLayer.push(Array.isArray(post) ? post : [post]);
 				rendered++;
 			}));
@@ -123,7 +124,7 @@ class Level {
 				}
 				loaded++;
 				if(!this.camera.inFustrum(mesh)) return;
-				mesh.render(camera);
+				mesh.render(camera, shader);
 				rendered++;
 			}));
 			/* Sort the blending layer */
@@ -134,7 +135,7 @@ class Level {
 			blending.forEach(({mesh}) => {
 				loaded++;
 				if(!this.camera.inFustrum(mesh)) return;
-				mesh.render(camera);
+				mesh.render(camera, shader);
 				rendered++;
 			});
 		});

@@ -94,8 +94,8 @@ class Ground extends Mesh {
 		this.model.destroy();
 		this.trees.concat(this.flowers).concat(this.animals).forEach((mesh) => mesh.destroy());
 	}
-	render(camera) {
-		super.render(camera);
+	render(camera, shader) {
+		super.render(camera, shader);
 		let post = [...this.trees];
 		this.renderAnimals && (post = post.concat(this.animals));
 		this.renderFlowers && (post = post.concat(this.flowers));

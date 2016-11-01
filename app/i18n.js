@@ -9,6 +9,7 @@ const locales = {
 		inventory: 'Inventory',
 		mute: 'Mute audio',
 		ok: 'OK',
+		postprocessing: 'PostProcessing',
 		renderedMeshes: '{rendered}/{loaded} meshes',
 		worksBetterWithChrome: 'Works better with Chrome'
 	},

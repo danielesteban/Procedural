@@ -32,6 +32,10 @@ class Cloud extends Mesh {
 		}
 		mat4.fromTranslation(this.transform, this.origin);
 	}
+	render(camera, shader) {
+		if(shader) return;
+		super.render(camera);
+	}
 	reset() {
 		vec3.add(this.origin, this.anchor.position, this.initialOrigin);
 		mat4.fromTranslation(this.transform, this.origin);

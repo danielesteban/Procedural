@@ -86,33 +86,36 @@ class Mesh {
 			Ammo.destroy(this.constraint);
 		}
 	}
-	render(camera) {
-		UseShader(this.shader);
-		mat4.multiply(this.cameraTransform, camera.transform, this.transform);
-		GL.uniformMatrix4fv(this.shader.uniforms.transform, false, this.cameraTransform);
-		if(this.shader.uniforms.modelTransform !== null) {
-			GL.uniformMatrix4fv(this.shader.uniforms.modelTransform, false, this.transform);
+	render(camera, shader) {
+		shader = shader || this.shader;
+		UseShader(shader);
+		if(camera) {
+			mat4.multiply(this.cameraTransform, camera.transform, this.transform);
+			GL.uniformMatrix4fv(shader.uniforms.transform, false, this.cameraTransform);
 		}
-		if(this.shader.uniforms.normalTransform !== null) {
-			GL.uniformMatrix3fv(this.shader.uniforms.normalTransform, false, this.normalTransform);
+		if(shader.uniforms.modelTransform !== null) {
+			GL.uniformMatrix4fv(shader.uniforms.modelTransform, false, this.transform);
 		}
-		if(this.shader.uniforms.cameraPosition !== null) {
-			GL.uniform3fv(this.shader.uniforms.cameraPosition, camera.position);
+		if(shader.uniforms.normalTransform !== null) {
+			GL.uniformMatrix3fv(shader.uniforms.normalTransform, false, this.normalTransform);
 		}
-		if(this.shader.uniforms.cameraDirection !== null) {
-			GL.uniform3fv(this.shader.uniforms.cameraDirection, camera.direction);
+		if(camera && shader.uniforms.cameraPosition !== null) {
+			GL.uniform3fv(shader.uniforms.cameraPosition, camera.position);
 		}
-		if(this.albedo !== undefined && this.shader.uniforms.albedo !== null) {
-			GL.uniform3fv(this.shader.uniforms.albedo, this.albedo);
+		if(camera && shader.uniforms.cameraDirection !== null) {
+			GL.uniform3fv(shader.uniforms.cameraDirection, camera.direction);
 		}
-		if(this.alpha !== undefined && this.shader.uniforms.alpha !== null) {
-			GL.uniform1f(this.shader.uniforms.alpha, this.alpha);
+		if(this.albedo !== undefined && shader.uniforms.albedo !== null) {
+			GL.uniform3fv(shader.uniforms.albedo, this.albedo);
 		}
-		if(this.modifier !== undefined && this.shader.uniforms.modifier !== null) {
-			GL.uniform1f(this.shader.uniforms.modifier, this.modifier);
+		if(this.alpha !== undefined && shader.uniforms.alpha !== null) {
+			GL.uniform1f(shader.uniforms.alpha, this.alpha);
 		}
-		if(this.model.scale !== undefined && this.shader.uniforms.scale !== null) {
-			GL.uniform3fv(this.shader.uniforms.scale, this.model.scale);
+		if(this.modifier !== undefined && shader.uniforms.modifier !== null) {
+			GL.uniform1f(shader.uniforms.modifier, this.modifier);
+		}
+		if(this.model.scale !== undefined && shader.uniforms.scale !== null) {
+			GL.uniform3fv(shader.uniforms.scale, this.model.scale);
 		}
 		BindModel(this.model);
 		this.texture !== undefined && BindTexture(this.texture);

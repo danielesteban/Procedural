@@ -15,10 +15,12 @@ class Flower extends Mesh {
 		this.flower = Math.random() >= 0.5 ? 1 : 2;
 		this.groundNormal = normal;
 	}
-	render(camera) {
-		UseShader(this.shader);
-		GL.uniform1f(this.shader.uniforms.texture, this.flower);
-		GL.uniform3fv(this.shader.uniforms.groundNormal, this.groundNormal);
+	render(camera, shader) {
+		if(!shader) {
+			UseShader(this.shader);
+			GL.uniform1f(this.shader.uniforms.texture, this.flower);
+			GL.uniform3fv(this.shader.uniforms.groundNormal, this.groundNormal);
+		}
 		super.render(camera);
 	}
 };

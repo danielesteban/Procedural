@@ -1,11 +1,12 @@
-import {Debug} from 'Engine/Context';
+import {GL, BindTexture, Debug, ResizeEvent, Screenshot} from 'Engine/Context';
+import FrameBuffer from 'Engine/FrameBuffer';
 import Level from 'Engine/Level';
 import Mesh from 'Engine/Mesh';
 import Music from 'Engine/Music';
 import {State as Input} from 'Engine/Input';
-import {Cloud, Ground} from 'Meshes';
+import {Cloud, Ground, FrameBuffer as FrameBufferMesh} from 'Meshes';
 import {Ground as GroundModel} from 'Models';
-import {Cloud as CloudShader, Ground as GroundShader, Animal as AnimalShader, Flower as FlowerShader, Tree as TreeShader, Skybox as SkyboxShader} from 'Shaders';
+import {Blur as BlurShader, Cloud as CloudShader, Depth as DepthShader, Ground as GroundShader, Animal as AnimalShader, Flower as FlowerShader, PostProcessing as PostProcessingShader, Tree as TreeShader, Skybox as SkyboxShader} from 'Shaders';
 import {glMatrix, vec2, vec3} from 'gl-matrix';
 import {Noise} from 'noisejs';
 
@@ -109,13 +110,51 @@ class Main extends Level {
 		TreeShader.sunPosition = vec3.create();
 		this.time = 0;
 
-		GroundShader.animation = 0;
+		/* Post-Processing */
+		if(localStorage.postprocessing) {
+			this.postprocessing = {
+				mesh: new FrameBufferMesh()
+			};
+			this.onResize = this.onResize.bind(this);
+			window.addEventListener(ResizeEvent, this.onResize);
+			this.onResize();
+		}
 
+		GroundShader.animation = 0;
 		!localStorage.mute && Music.play();
+	}
+	onResize() {
+		/* Post-Processing */
+		this.postprocessing.framebuffer && this.postprocessing.framebuffer.destroy();
+		this.postprocessing.framebuffer = new FrameBuffer(GL.drawingBufferWidth, GL.drawingBufferHeight);
+		this.postprocessing.depthbuffer && this.postprocessing.depthbuffer.destroy();
+		this.postprocessing.depthbuffer = new FrameBuffer(GL.drawingBufferWidth, GL.drawingBufferHeight, true);
+
+		this.postprocessing.blurResolution = vec2.fromValues(GL.drawingBufferWidth, GL.drawingBufferHeight);
+		this.postprocessing.blurEffect && this.postprocessing.blurEffect.destroy();
+		this.postprocessing.blurEffect = new FrameBuffer(this.postprocessing.blurResolution[0], this.postprocessing.blurResolution[1]);
+		this.postprocessing.blurEffectAux && this.postprocessing.blurEffectAux.destroy();
+		this.postprocessing.blurEffectAux = new FrameBuffer(this.postprocessing.blurResolution[0], this.postprocessing.blurResolution[1]);
 	}
 	destroy() {
 		super.destroy();
+		window.removeEventListener(ResizeEvent, this.onResize);
 		Music.reset();
+	}
+	getTime(date) {
+		const hours = date.getHours();
+		const minutes = date.getMinutes();
+		return (hours < 10 ? '0' : '') + (hours > 12 ? hours % 12 : hours) + ':' + (minutes < 10 ? '0' : '') + minutes + (hours > 12 ? 'PM' : 'AM');
+	}
+	processQueue(iteration) {
+		if(!this.queue.length || iteration >= 2) return;
+		const chunk = this.queue.shift();
+		const chunkID = chunk[0] + ':' + chunk[1];
+		delete this.queued[chunkID];
+		const mesh = new Ground(this.world, this.noise, chunk);
+		this.chunks.push(mesh);
+		this.world.addRigidBody(mesh.body, mesh.collisionGroup, Mesh.collisionAll);
+		this.queue.length && this.processQueue((iteration || 0) + 1);
 	}
 	animate(delta) {
 		super.animate(delta);
@@ -183,20 +222,75 @@ class Main extends Level {
 
 		this.processQueue();
 	}
-	processQueue(iteration) {
-		if(!this.queue.length || iteration >= 2) return;
-		const chunk = this.queue.shift();
-		const chunkID = chunk[0] + ':' + chunk[1];
-		delete this.queued[chunkID];
-		const mesh = new Ground(this.world, this.noise, chunk);
-		this.chunks.push(mesh);
-		this.world.addRigidBody(mesh.body, mesh.collisionGroup, Mesh.collisionAll);
-		this.queue.length && this.processQueue((iteration || 0) + 1);
-	}
-	getTime(date) {
-		const hours = date.getHours();
-		const minutes = date.getMinutes();
-		return (hours < 10 ? '0' : '') + (hours > 12 ? hours % 12 : hours) + ':' + (minutes < 10 ? '0' : '') + minutes + (hours > 12 ? 'PM' : 'AM');
+	render() {
+		if(!this.postprocessing) return super.render();
+
+		const screenshot = Input.screenshot;
+		Input.screenshot = false;
+
+		/* Render depth texture */
+		GL.bindFramebuffer(GL.FRAMEBUFFER, this.postprocessing.depthbuffer.buffer);
+		GL.colorMask(false, false, false, false);
+		GL.clear(GL.DEPTH_BUFFER_BIT);
+		super.render(DepthShader);
+		GL.colorMask(true, true, true, true);
+
+		/* Render color texture */
+		GL.bindFramebuffer(GL.FRAMEBUFFER, this.postprocessing.framebuffer.buffer);
+		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+		super.render();
+
+		GL.disable(GL.DEPTH_TEST);
+
+		/* Render blur texture */
+		const iterations = 4;
+		for(let i=0; i<iterations; i++) {
+			const radius = iterations - i - 1;
+			GL.bindFramebuffer(GL.FRAMEBUFFER, this.postprocessing.blurEffectAux.buffer);
+			GL.clear(GL.COLOR_BUFFER_BIT);
+			this.postprocessing.mesh.render([
+				{
+					id: 'Color',
+					buffer: i === 0 ? this.postprocessing.framebuffer.texture : this.postprocessing.blurEffect.texture,
+				}
+			], BlurShader, () => {
+				GL.uniform2fv(BlurShader.uniforms.resolution, this.postprocessing.blurResolution);
+				GL.uniform2fv(BlurShader.uniforms.direction, vec2.fromValues(radius, 0));
+			});
+			GL.bindFramebuffer(GL.FRAMEBUFFER, this.postprocessing.blurEffect.buffer);
+			GL.clear(GL.COLOR_BUFFER_BIT);
+			this.postprocessing.mesh.render([
+				{
+					id: 'Color',
+					buffer: this.postprocessing.blurEffectAux.texture,
+				}
+			], BlurShader, () => {
+				GL.uniform2fv(BlurShader.uniforms.resolution, this.postprocessing.blurResolution);
+				GL.uniform2fv(BlurShader.uniforms.direction, vec2.fromValues(0, radius));
+			});
+			GL.bindFramebuffer(GL.FRAMEBUFFER, null);
+		}
+
+		/* Render final composite */
+		this.postprocessing.mesh.render([
+			{
+				id: 'Blur',
+				buffer: this.postprocessing.blurEffect.texture,
+			},
+			{
+				id: 'Color',
+				buffer: this.postprocessing.framebuffer.texture,
+			},
+			{
+				id: 'Depth',
+				buffer: this.postprocessing.depthbuffer.depth
+			}
+		], PostProcessingShader);
+		GL.bindTexture(GL.TEXTURE_2D, null);
+
+		GL.enable(GL.DEPTH_TEST);
+
+		screenshot && Screenshot({});
 	}
 };
 

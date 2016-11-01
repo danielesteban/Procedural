@@ -165,7 +165,7 @@ aE(window, 'keyup', onKey);
 
 /* Settings Menu */
 const settings = cE('settings');
-['antialias', 'highDPI', 'debug', 'mute', 'fullscreen'].forEach((setting) => {
+['postprocessing', 'antialias', 'highDPI', 'debug', 'mute', 'fullscreen'].forEach((setting) => {
 	if(setting === 'highDPI' && (window.devicePixelRatio || 1) < 2) return;
 	if(setting === 'fullscreen' && electron) return;
 	const input = cE('input', {
