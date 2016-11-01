@@ -3,10 +3,10 @@ import Ammo from 'ammo.js';
 
 class Flower extends Model {
 	constructor() {
-		const width = 0.4;
+		const width = 0.2;
 		const height = 0.4;
-		const uvW = 1.0;
-		const uvH = 1.0;
+		const uvW = [0.25, 0.75];
+		const uvH = [0.0, 1.0];
 
 		const position = new Float32Array([
 			-width,		-height,		0,
@@ -31,25 +31,25 @@ class Flower extends Model {
 		]);
 
 		const uv = new Float32Array([
-			0,		uvH,
-			uvW,	uvH,
-			uvW,	0,
-			0,		0,
+			uvW[0],		uvH[1],
+			uvW[1],		uvH[1],
+			uvW[1],		uvH[0],
+			uvW[0],		uvH[0],
 
-			0,		uvH,
-			uvW,	uvH,
-			uvW,	0,
-			0,		0,
+			uvW[0],		uvH[1],
+			uvW[1],		uvH[1],
+			uvW[1],		uvH[0],
+			uvW[0],		uvH[0],
 
-			0,		uvH,
-			uvW,	uvH,
-			uvW,	0,
-			0,		0,
+			uvW[0],		uvH[1],
+			uvW[1],		uvH[1],
+			uvW[1],		uvH[0],
+			uvW[0],		uvH[0],
 
-			0,		uvH,
-			uvW,	uvH,
-			uvW,	0,
-			0,		0
+			uvW[0],		uvH[1],
+			uvW[1],		uvH[1],
+			uvW[1],		uvH[0],
+			uvW[0],		uvH[0]
 		]);
 
 		const indices = new Uint16Array([

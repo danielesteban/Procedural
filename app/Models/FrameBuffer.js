@@ -3,10 +3,10 @@ import Model from 'Engine/Model';
 class FrameBuffer extends Model {
 	constructor(width, height, uvW, uvH) {
 		const position = new Float32Array([
-			-1.0,		-1.0,		0,
-			1.0,		-1.0,		0,
-			1.0,		1.0,		0,
-			-1.0,		1.0,		0
+			-1.0,		-1.0,		1.0,
+			1.0,		-1.0,		1.0,
+			1.0,		1.0,		1.0,
+			-1.0,		1.0,		1.0
 		]);
 
 		const indices = new Uint16Array([
