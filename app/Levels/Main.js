@@ -163,7 +163,7 @@ class Main extends Level {
 		super.animate(delta);
 
 		/* Day/Night cycle */
-		this.time += delta * (Input.fastTime ? 100 : 4);
+		this.time += delta * (Input.fastTime ? 100 : 5);
 		const sun = CalcSun(this.time);
 		CloudShader.modifier = GroundShader.modifier = AnimalShader.modifier = FlowerShader.modifier = PostProcessingShader.modifier = TreeShader.modifier = sun.intensity;
 		vec3.copy(SkyboxShader.sunPosition, sun.position);

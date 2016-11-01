@@ -35,7 +35,7 @@ void main(void) {
 	vec3 blur = texture2D(textureBlur, uv).rgb;
 	float depth = texture2D(textureDepth, uv).r;
 	float z = linearDepth(depth);
-	float density = modifier * 0.006;
+	float density = modifier * 0.005;
 	float factor = clamp(exp2(-density * density * z * z * LOG2), 0.0, 1.0);
 	vec3 composite = mix(blur, color, factor);
 
