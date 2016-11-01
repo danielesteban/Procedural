@@ -25,7 +25,7 @@ void main(void) {
 	if(nightVision == 1.0) {
 		vec2 offset = vec2(0.4*sin(animation * 50.0), 0.4*cos(animation * 50.0));
 		noise = texture2D(textureNoise, (uv * 3.5) + offset).rgb;
-		uv += (noise.xy*0.005);
+		uv += (noise.xy*0.005) - 0.0025;
 	}
 
 	vec3 color = texture2D(textureColor, uv).rgb;
