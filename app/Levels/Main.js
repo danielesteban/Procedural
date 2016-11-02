@@ -310,7 +310,7 @@ class Main extends Level {
 
 		GL.enable(GL.DEPTH_TEST);
 
-		screenshot && Screenshot({});
+		screenshot && (Input.screenshot = Screenshot(screenshot));
 	}
 };
 

@@ -10,10 +10,10 @@ const childProcess = require('child_process');
 const commitCount = parseInt(childProcess.execSync('git rev-list HEAD --count').toString(), 10);
 const fs = require('fs');
 const production = process.env.NODE_ENV === 'production';
+const publicPath = '/' + (production ? 'procedural/' : '');
 
 const bundle = function(app) {
 	const appPath = path.resolve(__dirname, app.source);
-	const publicPath = '/' + (production ? 'procedural/' : '');
 	const trackCount = fs.readdirSync(path.join(appPath, 'Music')).filter(function(file) {return file.substr(file.length - 4) === '.ogg'}).length;
 	return {
 	 name: app.name,
@@ -77,6 +77,13 @@ const bundle = function(app) {
 				 exclude: modulesPath,
 				 query: {
 					 name: 'music/' + (production ? '[hash].[ext]' : '[name].[ext]')
+				 }
+			 },
+			 {
+				 test: /\.worker\.js$/,
+				 loader: 'file',
+				 query: {
+					 name: 'workers/' + (production ? '[hash].[ext]' : '[name].[ext]')
 				 }
 			 }
 		 ]

@@ -2,6 +2,7 @@ import {cE, aC, aE} from './DOM';
 import i18n from 'i18n';
 import createHistory from 'history/createBrowserHistory';
 import {saveAs} from 'file-saver';
+import {GIF} from 'gif.js';
 
 /* Setup global GL context */
 const hints = {
@@ -24,9 +25,31 @@ export const Clear = () => GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
 /* Screenshoot utility */
 let takingScreenshot = false;
 const screenshotRenderer = cE('canvas');
-export const Screenshot = ({targetWidth, targetHeight, callback}) => {
+export const Screenshot = ({targetWidth, targetHeight, gif, frame, callback}) => {
 	if(takingScreenshot) return;
 	takingScreenshot = true;
+
+	if(gif) {
+		if(!frame) {
+			gif = new GIF({
+				workerScript: require('gif.js/dist/gif.worker.js')
+			});
+			frame = 0;
+		}
+		frame % 5 === 0 && gif.addFrame(canvas, {delay: 200, copy: true});
+		if(++frame > 90) {
+			gif.on('finished', function(blob) {
+				saveAs(blob, `Screen Shot ${(new Date()).toString()}.gif`);
+				takingScreenshot = false;
+			});
+			gif.render();
+			return;
+	  } else {
+			takingScreenshot = false;
+			return {gif, frame};
+		}
+	}
+
 	let renderer = canvas;
 	if(targetWidth && targetHeight) {
 		renderer = screenshotRenderer;

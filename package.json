@@ -25,6 +25,7 @@
     "file-loader": "^0.9.0",
     "file-saver": "^1.3.3",
     "fpsmeter": "git+https://github.com/darsain/fpsmeter.git",
+    "gif.js": "^0.1.6",
     "gl-matrix": "^2.3.2",
     "history": "^4.3.0",
     "html-webpack-plugin": "^2.24.1",

@@ -142,8 +142,7 @@ class Level {
 
 		/* Take screenshot (if requested) */
 		if(Input.screenshot) {
-			Screenshot(Input.screenshot);
-			Input.screenshot = false;
+			Input.screenshot = Screenshot(Input.screenshot);
 		}
 
 		Debug && Debug.updateMeshes(rendered, loaded);

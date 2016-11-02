@@ -24,7 +24,8 @@ const resetState = () => {
 	const persist = [
 		'flight',
 		'fastTime',
-		'nightVision'
+		'nightVision',
+		'screenshot'
 	];
 	for(let id in State) !(~persist.indexOf(id)) && (State[id] = 0);
 };
@@ -161,7 +162,14 @@ const onKey = (e) => {
 			}
 		break;
 		case 80:
-			State.screenshot = state ? {} : false;
+			if(state) {
+				State.screenshot = {};
+			}
+		break;
+		case 219:
+			if(state) {
+				State.screenshot = {gif:true};
+			}
 		break;
 	}
 };
