@@ -8,6 +8,8 @@ import {Cloud, Ground, FrameBuffer as FrameBufferMesh} from 'Meshes';
 import {Ground as GroundModel} from 'Models';
 import {Blur as BlurShader, Cloud as CloudShader, Depth as DepthShader, Ground as GroundShader, Animal as AnimalShader, Flower as FlowerShader, PostProcessing as PostProcessingShader, Tree as TreeShader, Skybox as SkyboxShader} from 'Shaders';
 import {Fur as FurTexture} from 'Textures';
+import {Error} from 'Dialogs';
+import i18n from 'i18n';
 import {glMatrix, vec2, vec3} from 'gl-matrix';
 import {Noise} from 'noisejs';
 
@@ -192,6 +194,9 @@ class Main extends Level {
 			if(!Input.nightVision && PostProcessingShader.nightVision > 0.0) {
 				PostProcessingShader.nightVision -= Math.min(PostProcessingShader.nightVision, delta * 4.0);
 			}
+		} else if(Input.nightVision) {
+			new Error(i18n.nightVisionError);
+			Input.nightVision = false;
 		}
 
 		/* Test if we are in a new chunk */

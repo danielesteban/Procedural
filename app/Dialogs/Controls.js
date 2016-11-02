@@ -17,13 +17,14 @@ class Controls extends Dialog {
 		};
 
 		aC(this.container, col);
-		action(i18n.controlsScreenshot, 'P');
-		action(i18n.controlsGIF, 'L');
-		action(i18n.controlsFastTime, 'O');
-		col = cE('col');
-		action(i18n.controlsMove, ['W', 'A', 'S', 'D']);
+		action(i18n.controlsWalk, ['W', 'A', 'S', 'D']);
+		action(i18n.controlsRun, 'SHIFT', 160);
 		action(i18n.controlsFlight, 'SPACEBAR', 215);
+		col = cE('col');
 		action(i18n.controlsNightVision, 'F');
+		action(i18n.controlsFastTime, 'O');
+		action(i18n.controlsGIF, 'L');
+		action(i18n.controlsScreenshot, 'P');
 		aC(this.container, col);
 	}
 }
