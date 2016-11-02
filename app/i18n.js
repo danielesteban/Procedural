@@ -2,7 +2,15 @@ const locales = {
 	en: {
 		antialias: 'Antialias',
 		askForChrome: 'Yes, get Chrome now',
+		controls: 'Controls',
+		controlsScreenshot: 'Take a screenshot',
+		controlsGIF: 'Record a GIF',
+		controlsFastTime: 'Toggle time speed',
+		controlsMove: 'Move',
+		controlsFlight: 'Toggle flight',
+		controlsNightVision: 'Night vision',
 		debug: 'Debug info',
+		encodingGIF: 'Encoding GIF...',
 		error: 'Error',
 		fullscreen: 'Full-Screen',
 		highDPI: 'High DPI',
@@ -10,6 +18,7 @@ const locales = {
 		mute: 'Mute audio',
 		ok: 'OK',
 		postprocessing: 'PostProcessing',
+		recordingGIF: 'Recording GIF...',
 		renderedMeshes: '{rendered}/{loaded} meshes',
 		worksBetterWithChrome: 'Works better with Chrome'
 	},

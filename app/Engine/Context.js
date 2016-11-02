@@ -35,14 +35,17 @@ export const Screenshot = ({targetWidth, targetHeight, gif, frame, callback}) =>
 				workerScript: require('gif.js/dist/gif.worker.js')
 			});
 			frame = 0;
+			Debug && Debug.updateExtra(i18n.recordingGIF);
 		}
 		frame % 5 === 0 && gif.addFrame(canvas, {delay: 200, copy: true});
 		if(++frame > 90) {
 			gif.on('finished', function(blob) {
-				saveAs(blob, `Screen Shot ${(new Date()).toString()}.gif`);
+				saveAs(blob, `Screen Recording ${(new Date()).toString()}.gif`);
 				takingScreenshot = false;
+				Debug && Debug.updateExtra('');
 			});
 			gif.render();
+			Debug && Debug.updateExtra(i18n.encodingGIF);
 			return;
 	  } else {
 			takingScreenshot = false;
@@ -189,16 +192,16 @@ export const Debug = localStorage.debug ? (() => {
 		aC(container, cE('div', GL.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL)));
 	}
 	const position = cE('div');
-	const extra = cE('div');
 	const meshes = cE('div');
-	const footer = cE('div');
 	const time = cE('span');
+	const footer = cE('div');
+	const extra = cE('div');
 	aC(container, position);
-	aC(container, extra);
 	aC(container, meshes);
 	aC(footer, time);
 	aC(footer, cE('span', VERSION));
 	aC(container, footer);
+	aC(container, extra);
 	aC(document.body, container);
 	return {
 		updatePosition(pos) {

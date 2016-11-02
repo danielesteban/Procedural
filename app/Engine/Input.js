@@ -1,3 +1,4 @@
+import {Controls} from 'Dialogs';
 import {cE, aC, aE, tN} from './DOM';
 import Music from './Music';
 import i18n from 'i18n';
@@ -166,7 +167,7 @@ const onKey = (e) => {
 				State.screenshot = {};
 			}
 		break;
-		case 219:
+		case 76:
 			if(state) {
 				State.screenshot = {gif:true};
 			}
@@ -199,4 +200,10 @@ const settings = cE('settings');
 	aC(label, tN(i18n[setting]));
 	aC(settings, label);
 });
+const controls = new Controls();
+aC(settings, cE('a', {
+	text: i18n.controls,
+	className: 'button dark first',
+	onclick: () => controls.open()
+}));
 aC(document.body, settings);
