@@ -51,6 +51,7 @@ const CalcSun = (function() {
 		const time = accumulator % 1080;
 		date.setUTCHours(3 + (time / 60));
 		date.setUTCMinutes(time % 60);
+		date.setUTCSeconds(time % 1);
 
 		const julianDate = date.getTime() / DAY_MS - 0.5 + J1970,
 			solarMeanAnomaly = M0 + M1 * (julianDate - J2000),
@@ -165,7 +166,7 @@ class Main extends Level {
 		super.animate(delta);
 
 		/* Day/Night cycle */
-		this.time += delta * (Input.fastTime ? 100 : 5);
+		this.time += delta * (Input.fastTime ? 100 : 6);
 		const sun = CalcSun(this.time);
 		CloudShader.modifier = GroundShader.modifier = AnimalShader.modifier = FlowerShader.modifier = PostProcessingShader.modifier = TreeShader.modifier = sun.intensity;
 		vec3.copy(SkyboxShader.sunPosition, sun.position);
