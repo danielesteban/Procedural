@@ -1,6 +1,5 @@
 import Model from 'Engine/Model';
 import {vec3} from 'gl-matrix';
-import Ammo from 'ammo.js';
 
 class Ground extends Model {
 	static size = 16;
@@ -32,25 +31,20 @@ class Ground extends Model {
 		};
 
 		let vertex = 0;
-		const heightMap = {};
 		for(let z=0;z<=Ground.size;z++)
 		for(let x=0;x<=Ground.size;x++) {
 			const v = getVertex(x, z);
 			position[vertex++] = v[0];
 			position[vertex++] = v[1];
 			position[vertex++] = v[2];
-			heightMap[x + ':' + z] = {height: v[1]};
 		}
 
 		let index = 0;
 		const normals = [];
 		const u = vec3.create();
 		const v = vec3.create();
-		const physicsMesh = new Ammo.btTriangleMesh();
-		const t1 = new Ammo.btVector3();
-		const t2 = new Ammo.btVector3();
-		const t3 = new Ammo.btVector3();
 
+		const heightMap = {};
 		for(let z=0;z<Ground.size;z++)
 		for(let x=0;x<Ground.size;x++) {
 			const p1 = (z + 1) * (Ground.size + 1) + x;
@@ -60,8 +54,6 @@ class Ground extends Model {
 			const v1 = vec3.fromValues(position[p1 * 3], position[p1 * 3 + 1], position[p1 * 3 + 2]);
 			let v2 = vec3.fromValues(position[p2 * 3], position[p2 * 3 + 1], position[p2 * 3 + 2]);
 			let v3 = vec3.create();
-
-			t1.setValue(v1[0], v1[1], v1[2]);
 
 			for(let t=0; t<2; t++) {
 				indices[index++] = p1;
@@ -83,20 +75,15 @@ class Ground extends Model {
 				if(!normals[p3]) normals[p3] = [];
 				normals[p3].push(n);
 
-				t2.setValue(v2[0], v2[1], v2[2]);
-				t3.setValue(v3[0], v3[1], v3[2]);
-				physicsMesh.addTriangle(
-					t1, t2, t3
-				);
+				!heightMap[x] && (heightMap[x] = []);
+				!heightMap[x][z] && (heightMap[x][z] = []);
+				heightMap[x][z].push([vec3.clone(v1), vec3.clone(v2), vec3.clone(v3)]);
 
 				p2 = p3;
 				vec3.copy(v2, v3);
 				p3 = z * (Ground.size + 1) + x;
 			}
 		}
-		Ammo.destroy(t1);
-		Ammo.destroy(t2);
-		Ammo.destroy(t3);
 
 		/* Include neighbors into existing normals */
 		const isNeighbor = (x, z) => (x < 0 || x > Ground.size || z < 0 || z > Ground.size);
@@ -133,7 +120,6 @@ class Ground extends Model {
 			normal[i * 3] = sum[0];
 			normal[i * 3 + 1] = sum[1];
 			normal[i * 3 + 2] = sum[2];
-			heightMap[i % (Ground.size + 1) + ':' + Math.floor(i / (Ground.size + 1))].normal = sum;
 		});
 
 		const bounds = {
@@ -142,11 +128,45 @@ class Ground extends Model {
 			length: Ground.size * Ground.scale
 		};
 
-		const collision = new Ammo.btBvhTriangleMeshShape(physicsMesh, true, true);
-
-		super({position, normal, indices, bounds}, collision);
-		this.physicsMesh = physicsMesh;
+		super({position, normal, indices, bounds});
 		this.heightMap = heightMap;
+	}
+	testPoint(x, z) {
+		const mapX = Math.floor(x / Ground.scale + Ground.size * 0.5);
+		if(mapX < 0 || mapX >= Ground.size) return;
+		const mapZ = Math.floor(z / Ground.scale + Ground.size * 0.5);
+		if(mapZ < 0 || mapZ >= Ground.size) return;
+		const triangles = this.heightMap[mapX][mapZ];
+		const origin = vec3.fromValues(x, this.bounds.height + 1, z);
+		const ray = vec3.fromValues(0, -1, 0);
+		const ab = vec3.create();
+		const ac = vec3.create();
+		const aux = vec3.create();
+		const normal = vec3.create();
+		const hit = vec3.create();
+		for(let i=0; i<2; i++) {
+			const [a, b, c] = triangles[i];
+			vec3.sub(ab, b, a);
+			vec3.sub(ac, c, a);
+			vec3.cross(normal, ab, ac);
+			vec3.normalize(normal, normal);
+			const t = vec3.dot(normal, vec3.sub(aux, a, origin)) / vec3.dot(normal, ray);
+			if(t > 0) {
+				vec3.scaleAndAdd(hit, origin, ray, t);
+				const toHit = vec3.sub(aux, hit, a);
+				const dot00 = vec3.dot(ac, ac);
+				const dot01 = vec3.dot(ac, ab);
+				const dot02 = vec3.dot(ac, toHit);
+				const dot11 = vec3.dot(ab, ab);
+				const dot12 = vec3.dot(ab, toHit);
+				const divide = dot00 * dot11 - dot01 * dot01;
+				const u = (dot11 * dot02 - dot01 * dot12) / divide;
+				const v = (dot00 * dot12 - dot01 * dot02) / divide;
+				if(u >= 0 && v >= 0 && u + v <= 1) {
+					return {height: hit[1], normal};
+				}
+			}
+		}
 	}
 };
 

@@ -1,6 +1,5 @@
 import Model from 'Engine/Model';
 import {vec3} from 'gl-matrix';
-import Ammo from 'ammo.js';
 
 class Wolf extends Model {
 	constructor(scale) {

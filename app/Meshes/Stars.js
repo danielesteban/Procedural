@@ -15,7 +15,6 @@ class Stars extends Mesh {
 		};
 	}
 	destroy() {
-		super.destroy();
 		this.model.destroy();
 	}
 	animate(delta) {

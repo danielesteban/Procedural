@@ -10,7 +10,7 @@ class Flower extends Mesh {
 		const rotation = quat.setAxisAngle(quat.create(), vec3.fromValues(0, 1, 0), Math.random() * Math.PI);
 		quat.rotateX(rotation, rotation, glMatrix.toRadian(Math.floor(Math.random() * 31) - 15));
 		quat.rotateZ(rotation, rotation, glMatrix.toRadian(Math.floor(Math.random() * 31) - 15));
-		super(model, Shader, origin, rotation, null, Texture);
+		super(model, Shader, origin, rotation, Texture);
 		this.blending = this.disableDepthMask = true;
 		this.flower = Math.random() >= 0.5 ? 1 : 2;
 		this.groundNormal = normal;

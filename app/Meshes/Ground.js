@@ -24,32 +24,17 @@ class Ground extends Mesh {
 		new TreeModel(2.5),
 		new TreeModel(3.5)
 	];
-	constructor(world, noise, chunk) {
+	constructor(noise, chunk) {
 		const origin = vec3.fromValues(chunk[0] * Model.size * Model.scale, 0, chunk[1] * Model.size * Model.scale);
-		super(new Model(noise, chunk), Shader, origin, null, {mass: 0, friction: 1, group: Mesh.collisionFloor}, Texture);
+		super(new Model(noise, chunk), Shader, origin, null, Texture);
 		this.chunk = chunk;
 
 		const getSpawnPoint = (minY, maxY) => {
-			const x = Math.floor(Math.random() * (Model.size - 1)) + 1;
-			const z = Math.floor(Math.random() * (Model.size - 1)) + 1;
-			const p = this.model.heightMap[x + ':' + z];
-			if(p.height < minY || p.height > maxY) return false;
-			const offsetX = (Math.random() * 0.2 + 0.05) * (Math.random() >= 0.5 ? 1 : -1);
-			const offsetZ = (Math.random() * 0.2 + 0.05) * (Math.random() >= 0.5 ? 1 : -1);
-			const normal = vec3.clone(p.normal);
-			let height = p.height;
-			const pX = this.model.heightMap[Math.round(x + offsetX) + ':' + z];
-			vec3.add(normal, normal, pX.normal);
-			height += pX.height;
-			const pZ = this.model.heightMap[x + ':' + Math.round(z + offsetZ)];
-			vec3.add(normal, normal, pZ.normal);
-			height += pZ.height;
-			const offsetP = this.model.heightMap[Math.round(x + offsetX) + ':' + Math.round(z + offsetZ)];
-			vec3.add(normal, normal, offsetP.normal);
-			height += offsetP.height;
-			vec3.normalize(normal, normal);
-			height /= 4;
-			const spawn = vec3.fromValues((x + offsetX - Model.size * 0.5) * Model.scale, height, (z + offsetZ - Model.size * 0.5) * Model.scale);
+			const x = (Math.floor(Math.random() * (Model.size - 1)) + 1 + Math.random() - 0.5 - Model.size * 0.5) * Model.scale;
+			const z = (Math.floor(Math.random() * (Model.size - 1)) + 1 + Math.random() - 0.5 - Model.size * 0.5) * Model.scale;
+			const {height, normal} = this.model.testPoint(x, z);
+			if(height < minY || height > maxY) return false;
+			const spawn = vec3.fromValues(x, height, z);
 			vec3.add(spawn, spawn, origin);
 			return {
 				origin: spawn,
@@ -80,7 +65,7 @@ class Ground extends Mesh {
 		};
 		for(let i=0; i<3; i++) {
 			const spawn = getSpawnPoint(1, 16);
-			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * Ground.Animals.length)], spawn.origin, world, bounds));
+			spawn && this.animals.push(new Animal(Ground.Animals[Math.floor(Math.random() * Ground.Animals.length)], spawn.origin, this, bounds));
 		}
 	}
 	animate(delta, camera) {
@@ -90,9 +75,7 @@ class Ground extends Mesh {
 		this.renderAnimals && this.animals.forEach((mesh) => mesh.animate(delta));
 	}
 	destroy() {
-		super.destroy();
 		this.model.destroy();
-		this.trees.concat(this.flowers).concat(this.animals).forEach((mesh) => mesh.destroy());
 	}
 	render(camera, shader) {
 		super.render(camera, shader);

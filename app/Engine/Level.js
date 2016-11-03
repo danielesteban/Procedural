@@ -5,7 +5,6 @@ import Mesh from './Mesh';
 import {AskForChrome} from 'Dialogs';
 import {Skybox, Stars} from 'Meshes';
 import {vec3} from 'gl-matrix';
-import Ammo from 'ammo.js';
 
 class Level {
 	constructor({layers, models}) {
@@ -19,33 +18,12 @@ class Level {
 		this.stars = new Stars();
 		this.layers.push([this.skybox, this.stars]);
 
-		/* Physics world setup */
-		this.collisionConfiguration = new Ammo.btDefaultCollisionConfiguration();
-		this.dispatcher = new Ammo.btCollisionDispatcher(this.collisionConfiguration);
-		this.broadphase = new Ammo.btDbvtBroadphase();
-		this.solver = new Ammo.btSequentialImpulseConstraintSolver();
-		const world = this.world = new Ammo.btDiscreteDynamicsWorld(this.dispatcher, this.broadphase, this.solver, this.collisionConfiguration);
-		const gravity = new Ammo.btVector3(0, -10, 0);
-		this.world.setGravity(gravity);
-		Ammo.destroy(gravity);
-
-		/* Add all rigid bodies and constraints to the world */
-		this.layers.forEach((layer) => layer.forEach((mesh) => {
-			mesh.body && world.addRigidBody(mesh.body, mesh.collisionGroup, Mesh.collisionAll);
-			mesh.constraint && world.addConstraint(mesh.constraint);
-		}));
-
 		/* Camera controller */
 		this.camera = new Camera(this);
 	}
 	destroy() {
 		/* Dereference allocated memory */
-		Ammo.destroy(this.world);
-		Ammo.destroy(this.solver);
-		Ammo.destroy(this.broadphase);
-		Ammo.destroy(this.dispatcher);
-		Ammo.destroy(this.collisionConfiguration);
-		this.layers.forEach((layer) => layer.forEach((mesh) => mesh.destroy()));
+		this.layers.forEach((layer) => layer.forEach((mesh) => mesh.destroy && mesh.destroy()));
 		for(let i in this.models) this.models[i].destroy();
 		this.camera.destroy();
 		BindTexture(null);
@@ -53,14 +31,8 @@ class Level {
 		UseShader(null);
 	}
 	animate(delta) {
-		/* Step the physics simulation */
-		this.world.stepSimulation(delta, 10, 1 / 60);
-
 		/* Animate all meshes */
 		this.layers.forEach((layer) => layer.forEach((mesh) => mesh.animate && mesh.animate(delta, this.camera.position)));
-
-		/* Update all transforms */
-		this.layers.forEach((layer) => layer.forEach((mesh) => mesh.updateTransform && mesh.updateTransform()));
 
 		/* Process input */
 		this.camera.processInput(delta);

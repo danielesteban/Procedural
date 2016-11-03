@@ -2,7 +2,6 @@ import {GL, Debug, ResizeEvent} from './Context';
 import {State as Input} from './Input';
 import {glMatrix, vec3, mat4} from 'gl-matrix';
 import Mesh from './Mesh';
-import Ammo from 'ammo.js';
 
 class Camera {
 	constructor(level) {
@@ -163,31 +162,13 @@ class Camera {
 
 		this.updateVectors();
 	}
-	rayTest(fromX, fromY, fromZ, toX, toY, toZ, mask) {
-		let result = false;
-		const from = new Ammo.btVector3(this.position[0] + fromX, this.position[1] + fromY, this.position[2] + fromZ);
-		const to = new Ammo.btVector3(this.position[0] + toX, this.position[1] + toY, this.position[2] + toZ);
-		const rayResult = new Ammo.ClosestRayResultCallback(from, to);
-		rayResult.set_m_collisionFilterMask(mask || (Mesh.collisionStatic | Mesh.collisionElevator));
-		this.level.world.rayTest(from, to, rayResult);
-		if(rayResult.hasHit()) {
-			result = rayResult;
-		}
-		Ammo.destroy(to);
-		Ammo.destroy(from);
-		return result;
-	}
-	getFloorY(ceiling) {
+	getFloorY() {
 		/* Get the closest floor plane at camera position */
-		const ray = this.rayTest(
-			0, this.height * 0.25 - this.cameraOffset, 0,		// from
-			0, 200 * (ceiling ? 1 : -1), 0,									// to
-			Mesh.collisionFloor
-		);
-		if(!ray) return (!ceiling ? this.getFloorY(true) : this.position[1]);
-		const floorY = ray.get_m_hitPointWorld().y() + this.height * 0.5 + this.cameraOffset;
-		Ammo.destroy(ray);
-		return floorY;
+		const chunk = this.level.chunks.get(this.level.chunk[0] + ':' + this.level.chunk[1]);
+		if(!chunk) return;
+		const hit = chunk.model.testPoint(this.position[0] - chunk.origin[0], this.position[2] - chunk.origin[2]);
+		if(!hit) return;
+		return hit.height + this.height * 0.5 + this.cameraOffset;
 	}
 	inFustrum(mesh) {
 		/* 2D Frustum culling */

@@ -19,7 +19,6 @@ class Cloud extends Mesh {
 		vec3.normalize(this.animation, this.animation);
 	}
 	destroy() {
-		super.destroy();
 		this.model.destroy();
 	}
 	animate(delta) {

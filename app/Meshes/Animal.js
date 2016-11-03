@@ -2,16 +2,15 @@ import Mesh from 'Engine/Mesh';
 import {Animal as Shader} from 'Shaders';
 import {Fur as Texture} from 'Textures';
 import {glMatrix, vec3, mat3, mat4, quat} from 'gl-matrix';
-import Ammo from 'ammo.js';
 
 class Animal extends Mesh {
-	constructor({model, albedo}, origin, world, bounds) {
-		super(model, Shader, origin, null, null, Texture);
+	constructor({model, albedo}, origin, ground, bounds) {
+		super(model, Shader, origin, null, Texture);
 		this.albedo = vec3.clone(albedo);
 		this.albedo[0] += (Math.floor(Math.random() * 3) - 1) * 0.05;
 		this.albedo[1] += (Math.floor(Math.random() * 3) - 1) * 0.05;
 		this.albedo[2] += (Math.floor(Math.random() * 3) - 1) * 0.05;
-		this.world = world;
+		this.ground = ground;
 		this.animationBounds = bounds;
 		this.tilt = 0;
 		this.pitch = 0;
@@ -55,20 +54,12 @@ class Animal extends Mesh {
 			vec3.scaleAndAdd(this.origin, this.origin, this.animation.direction, step);
 		}
 
-		const from = new Ammo.btVector3(this.origin[0], 256, this.origin[2]);
-		const to = new Ammo.btVector3(this.origin[0], -1, this.origin[2]);
-		const ray = new Ammo.ClosestRayResultCallback(from, to);
-		ray.set_m_collisionFilterMask(Mesh.collisionFloor);
-		this.world.rayTest(from, to, ray);
-		if(ray.hasHit()) {
-			let floorY = ray.get_m_hitPointWorld().y();
-			floorY < 0.01 && (floorY = this.model.bounds.height * -0.5);
-			const yDiff = floorY - this.origin[1];
+		const hit = this.ground.model.testPoint(this.origin[0] - this.ground.origin[0], this.origin[2] - this.ground.origin[2]);
+		if(hit) {
+			hit.height < 0.01 && (hit.height = this.model.bounds.height * -0.5);
+			const yDiff = hit.height - this.origin[1];
 			this.origin[1] += Math.min(Math.max(yDiff, -step), step);
 		}
-		Ammo.destroy(ray);
-		Ammo.destroy(to);
-		Ammo.destroy(from);
 
 		let tiltDiff = this.animation.tilt - this.tilt;
 		while(tiltDiff < -Math.PI) tiltDiff += Math.PI * 2;

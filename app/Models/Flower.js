@@ -1,5 +1,4 @@
 import Model from 'Engine/Model';
-import Ammo from 'ammo.js';
 
 class Flower extends Model {
 	constructor() {

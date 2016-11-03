@@ -10,7 +10,6 @@ class Skybox extends Mesh {
 		this.depthFunc = GL.LEQUAL;
 	}
 	destroy() {
-		super.destroy();
 		this.model.destroy();
 	}
 	render(camera, shader) {

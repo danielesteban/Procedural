@@ -1,17 +1,12 @@
 import {GL, BindModel} from './Context';
 import {vec3} from 'gl-matrix';
-import Ammo from 'ammo.js';
 
 class Model {
-	constructor(vertex, collision) {
+	constructor(vertex) {
 		BindModel(null);
 		const {position, normal, uv, color, shadow, bone, indices, points, scale, bounds} = vertex;
 
 		scale && (this.scale = scale);
-		if(collision) {
-			if(collision === 'auto') this.genCollisionMesh(position, indices);
-			else this.collision = collision;
-		}
 
 		if(position) {
 			this.position = GL.createBuffer();
@@ -80,35 +75,6 @@ class Model {
 			this.stride = points.stride;
 		}
 	}
-	genCollisionMesh(position, indices) {
-		if(!position || !indices || !indices.length) return;
-
-		this.collision && Ammo.destroy(this.collision);
-		this.physicsMesh && Ammo.destroy(this.physicsMesh);
-
-		this.physicsMesh = new Ammo.btTriangleMesh();
-		const p1 = new Ammo.btVector3();
-		const p2 = new Ammo.btVector3();
-		const p3 = new Ammo.btVector3();
-		for(let i=0; i<indices.length; i+=3) {
-			p1.setValue(position[indices[i] * 3], position[indices[i] * 3 + 1], position[indices[i] * 3 + 2]);
-			p2.setValue(position[indices[i + 1] * 3], position[indices[i + 1] * 3 + 1], position[indices[i + 1] * 3 + 2]);
-			p3.setValue(position[indices[i + 2] * 3], position[indices[i + 2] * 3 + 1], position[indices[i + 2] * 3 + 2]);
-			this.physicsMesh.addTriangle(
-				p1, p2, p3
-			);
-		}
-		Ammo.destroy(p1);
-		Ammo.destroy(p2);
-		Ammo.destroy(p3);
-
-		this.collision = new Ammo.btBvhTriangleMeshShape(this.physicsMesh, true, true);
-		if(this.scale) {
-			const physicsScale = new Ammo.btVector3(this.scale[0], this.scale[1], this.scale[2]);
-			this.collision.setLocalScaling(physicsScale);
-			Ammo.destroy(physicsScale);
-		}
-	}
 	destroy() {
 		this.position && GL.deleteBuffer(this.position);
 		this.normal && GL.deleteBuffer(this.normal);
@@ -118,8 +84,6 @@ class Model {
 		this.bone && GL.deleteBuffer(this.bone);
 		this.indices && GL.deleteBuffer(this.indices);
 		this.points && GL.deleteBuffer(this.points);
-		this.physicsMesh && Ammo.destroy(this.physicsMesh);
-		this.collision && Ammo.destroy(this.collision);
 	}
 };
 
