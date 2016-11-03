@@ -17,11 +17,11 @@ class Ground extends Model {
 		const getVertex = (x, z) => {
 			const cX = offset[0] + x * Ground.scale;
 			const cZ = offset[1] + z * Ground.scale;
-			const factor = Math.abs(noise.simplex2(cX / 512, cZ / 512)) * 128 + 256;
+			const factor = Math.abs(noise.perlin2(cX / 512, cZ / 512)) * 256 + 256;
 			let altitude = Math.abs(noise.perlin2(cX / factor, cZ / factor)) * 512;
 			altitude > 32 && (altitude = Math.floor(altitude / 2) * 2);
 			altitude > 64 && (altitude = Math.ceil(altitude / 4) * 4);
-			const height = Math.min(Math.max(Math.abs(noise.perlin2(cX / (factor * 2), cZ / (factor * 2)) * altitude) - 2, 0), 256);
+			const height = Math.min(Math.max(Math.abs(noise.perlin2(cX / (factor * 2), cZ / (factor * 2)) * altitude) - 2, 0), 256) * Ground.scale;
 			maxHeight = Math.max(maxHeight, height);
 			return vec3.fromValues(
 				(x - Ground.size * 0.5) * Ground.scale,

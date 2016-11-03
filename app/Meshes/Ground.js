@@ -32,7 +32,9 @@ class Ground extends Mesh {
 		const getSpawnPoint = (minY, maxY) => {
 			const x = (Math.floor(Math.random() * (Model.size - 1)) + 1 + Math.random() - 0.5 - Model.size * 0.5) * Model.scale;
 			const z = (Math.floor(Math.random() * (Model.size - 1)) + 1 + Math.random() - 0.5 - Model.size * 0.5) * Model.scale;
-			const {height, normal} = this.model.testPoint(x, z);
+			const hit = this.model.testPoint(x, z);
+			if(!hit) return;
+			const {height, normal} = hit;
 			if(height < minY || height > maxY) return false;
 			const spawn = vec3.fromValues(x, height, z);
 			vec3.add(spawn, spawn, origin);
