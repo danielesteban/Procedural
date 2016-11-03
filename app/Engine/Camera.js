@@ -9,7 +9,7 @@ class Camera {
 		this.height = 2;
 		this.cameraOffset = this.height * 0.375;
 		this.fov = glMatrix.toRadian(75);
-		this.tilt = glMatrix.toRadian(270);
+		this.tilt = glMatrix.toRadian(315);
 		this.pitch = glMatrix.toRadian(-15);
 		this.projection = mat4.create();
 		this.position = vec3.fromValues(Math.floor(Math.random() * 2048) - 1024, this.height * 0.5 + this.cameraOffset, Math.floor(Math.random() * 2048) - 1024);
@@ -106,7 +106,7 @@ class Camera {
 	processInput(delta) {
 		/* Movement */
 		let updatePos = false;
-		const speed = Input.flight ? (Input.run ? 32 : 16) : (Input.run ? 12 : 6);
+		const speed = Input.flight ? (Input.run ? 32 : 12) : (Input.run ? 12 : 6);
 		const step = speed * delta;
 
 		/* Keyboard */

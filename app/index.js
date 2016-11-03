@@ -52,6 +52,10 @@ WebFont.load({
 	active: () => {
 		loaded.font = true;
 		init();
+	},
+	inactive: () => {
+		loaded.font = true;
+		init();
 	}
 });
 
