@@ -87,7 +87,7 @@ class Main extends Level {
 
 		super({layers: [clouds, chunks.layer]});
 
-		this.renderRadius = 14;
+		this.renderRadius = 16;
 		this.noise = new Noise(Math.random());
 		this.chunk = vec2.create();
 		this.chunks = chunks;
