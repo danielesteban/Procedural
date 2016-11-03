@@ -77,7 +77,17 @@ class Ground extends Model {
 
 				!heightMap[x] && (heightMap[x] = []);
 				!heightMap[x][z] && (heightMap[x][z] = []);
-				heightMap[x][z].push([vec3.clone(v1), vec3.clone(v2), vec3.clone(v3)]);
+				const dot00 = vec3.dot(v, v);
+				const dot01 = vec3.dot(v, u);
+				const dot11 = vec3.dot(u, u);
+				heightMap[x][z].push({
+					triangle: [vec3.clone(v1), vec3.clone(v2), vec3.clone(v3)],
+					u: vec3.clone(u),
+					v: vec3.clone(v),
+					normal: n,
+					divide: dot00 * dot11 - dot01 * dot01,
+					dot00, dot01, dot11
+				});
 
 				p2 = p3;
 				vec3.copy(v2, v3);
@@ -137,32 +147,28 @@ class Ground extends Model {
 		const mapZ = Math.floor(z / Ground.scale + Ground.size * 0.5);
 		if(mapZ < 0 || mapZ >= Ground.size) return;
 		const triangles = this.heightMap[mapX][mapZ];
-		const origin = vec3.fromValues(x, this.bounds.height + 1, z);
-		const ray = vec3.fromValues(0, -1, 0);
-		const ab = vec3.create();
-		const ac = vec3.create();
-		const aux = vec3.create();
-		const normal = vec3.create();
-		const hit = vec3.create();
+		if(!this.testPointAux) {
+			this.testPointAux = {
+				origin: vec3.create(0, this.bounds.height + 1, 0),
+				ray: vec3.fromValues(0, -1, 0),
+				aux: vec3.create(),
+				hit: vec3.create(),
+			};
+		}
+		const {origin, ray, aux, hit} = this.testPointAux;
+		origin[0] = x;
+		origin[2] = z;
 		for(let i=0; i<2; i++) {
-			const [a, b, c] = triangles[i];
-			vec3.sub(ab, b, a);
-			vec3.sub(ac, c, a);
-			vec3.cross(normal, ab, ac);
-			vec3.normalize(normal, normal);
-			const t = vec3.dot(normal, vec3.sub(aux, a, origin)) / vec3.dot(normal, ray);
+			const {triangle, normal, u, v, dot00, dot01, dot11, divide} = triangles[i];
+			const t = vec3.dot(normal, vec3.sub(aux, triangle[0], origin)) / vec3.dot(normal, ray);
 			if(t > 0) {
 				vec3.scaleAndAdd(hit, origin, ray, t);
-				const toHit = vec3.sub(aux, hit, a);
-				const dot00 = vec3.dot(ac, ac);
-				const dot01 = vec3.dot(ac, ab);
-				const dot02 = vec3.dot(ac, toHit);
-				const dot11 = vec3.dot(ab, ab);
-				const dot12 = vec3.dot(ab, toHit);
-				const divide = dot00 * dot11 - dot01 * dot01;
-				const u = (dot11 * dot02 - dot01 * dot12) / divide;
-				const v = (dot00 * dot12 - dot01 * dot02) / divide;
-				if(u >= 0 && v >= 0 && u + v <= 1) {
+				const toHit = vec3.sub(aux, hit, triangle[0]);
+				const dot02 = vec3.dot(v, toHit);
+				const dot12 = vec3.dot(u, toHit);
+				const dotU = (dot11 * dot02 - dot01 * dot12) / divide;
+				const dotV = (dot00 * dot12 - dot01 * dot02) / divide;
+				if(dotU >= 0 && dotV >= 0 && dotU + dotV <= 1) {
 					return {height: hit[1], normal};
 				}
 			}
