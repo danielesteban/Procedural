@@ -149,10 +149,10 @@ class Ground extends Model {
 		const triangles = this.heightMap[mapX][mapZ];
 		if(!this.testPointAux) {
 			this.testPointAux = {
-				origin: vec3.create(0, this.bounds.height + 1, 0),
+				origin: vec3.fromValues(0, this.bounds.height + 1, 0),
 				ray: vec3.fromValues(0, -1, 0),
 				aux: vec3.create(),
-				hit: vec3.create(),
+				hit: vec3.create()
 			};
 		}
 		const {origin, ray, aux, hit} = this.testPointAux;
