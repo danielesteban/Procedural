@@ -1,6 +1,5 @@
 .DS_Store
-app/Music/
-backups/
-build/
-chunks/
+app/Music/*.ogg
+dist/
 node_modules/
+npm-debug.log

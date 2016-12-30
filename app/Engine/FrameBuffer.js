@@ -6,7 +6,7 @@ class Framebuffer {
 		this.buffer = GL.createFramebuffer();
 		GL.bindFramebuffer(GL.FRAMEBUFFER, this.buffer);
 		this.buffer.width = width;
-    this.buffer.height = height;
+		this.buffer.height = height;
 
 		/* Color texture */
 		this.texture = GL.createTexture();
@@ -41,7 +41,7 @@ class Framebuffer {
 			GL.bindRenderbuffer(GL.RENDERBUFFER, null);
 		}
 
-    GL.bindFramebuffer(GL.FRAMEBUFFER, null);
+		GL.bindFramebuffer(GL.FRAMEBUFFER, null);
 	}
 	destroy() {
 		GL.deleteFramebuffer(this.buffer);

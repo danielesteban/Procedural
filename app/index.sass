@@ -38,28 +38,24 @@ canvas
 	height: 100%
 	cursor: pointer
 
-debug, settings, status, chat
+debug, settings
 	display: block
 	position: fixed
 	color: #fafafa
 	text-shadow: 1px 1px #1a1a1a
-
-debug, settings, status
-	z-index: 1
+	z-index: 1	
 
 debug
 	top: 50px
 	right: 5px
 	text-align: right
 
-settings, status
-	padding: 5px
-	border-radius: 4px
-	background: rgba(0, 0, 0, .25)
-
 settings
 	bottom: 10px
 	right: 10px
+	padding: 5px
+	border-radius: 4px
+	background: rgba(0, 0, 0, .25)
 	label
 		display: block
 		width: 120px
@@ -80,52 +76,6 @@ settings
 			background: #1a1a1a
 		&.first
 			margin-top: 6px
-
-status
-	top: 10px
-	left: 10px
-
-chat
-	top: 100%
-	width: 100%
-	height: 50%
-	padding: 10px
-	font-size: 18px
-	line-height: 29px
-	transition: top 0.15s ease-out
-	&.viewport, &.open
-		top: 50%
-	&.full
-		background: rgba(0, 0, 0, .5)
-		padding-right: 150px
-		padding-bottom: 30px
-		wrapper
-			display: block
-			height: 100%
-			overflow-y: auto
-		input[type="text"]
-			display: block
-			margin: 0
-			border: 0
-			outline: 0
-			width: 100%
-			padding: 4px 0
-			background: transparent
-		peers
-			position: absolute
-			display: block
-			padding: 5px 0
-			top: 0
-			right: 0
-			width: 150px
-			height: 100%
-			overflow-y: auto
-			background: rgba(0, 0, 0, .5)
-			peer
-				display: block
-				padding: 0 10px
-	entry
-		display: block
 
 overlay
 	display: block
@@ -156,22 +106,12 @@ dialog
 	overlay.open &
 		opacity: 1
 		transform: translate(0, 0)
-	&.wide
-		width: 640px
 	header
 		text-align: center
 		font-size: 32px
 		line-height: 52px
 		border-bottom: 1px solid #a1a1a1
 		margin-bottom: 10px
-	form
-		label, input, select, textarea
-			display: block
-			width: 100%
-		input, textarea
-			margin-bottom: 10px
-		textarea
-			height: 150px
 	button[type="submit"]
 		display: block
 		margin: 20px auto 10px
@@ -185,60 +125,6 @@ dialog
 		border: 1px solid #1a1a1a
 		box-shadow: rgba(0, 0, 0, 0.117647) 0px 1px 6px, rgba(0, 0, 0, 0.117647) 0px 1px 4px
 		cursor: pointer
-	a
-		color: #365899
-		cursor: pointer
-		text-decoration: none
-	footer
-		text-align: right
-	actions
-		position: relative
-		display: block
-		> div
-			position: absolute
-			top: -65px
-			right: 20px
-			font-size: 32px
-			line-height: 52px
-			cursor: pointer
-	tabs
-		display: block
-		background: #999
-		margin: 0 -10px 10px
-		padding: 0 10px
-		> div
-			display: inline-block
-			padding: 5px 10px
-			width: 33.333333333333336%
-			cursor: pointer
-			&.active
-				background: #fafafa
-	worlds, beacons
-		display: block
-		height: 440px
-		overflow-y: auto
-		> div
-			padding: 10px
-			cursor: pointer
-			+clearfix()
-			&:nth-child(odd)
-				background: #fff
-			&:hover
-				background: #afafaf
-			img
-				float: left
-				width: 196px
-				height: 110px
-				vertical-align: middle
-				margin-right: 15px
-				background: #000
-				border: 0
-			h4, p
-				margin: 0
-			small
-				float: right
-			&.more
-				text-align: center
 	&.controls
 		width: 880px
 		label
@@ -275,18 +161,3 @@ dialog
 	&.askForChrome
 		p
 			text-align: center
-	&.confirm
-		text-align: center
-		button[type="submit"]
-			display: inline-block
-			margin: 0 0 0 50px
-	&.inventory
-		+clearfix()
-		item
-			display: block
-			float: left
-			width: 64px
-			height: 64px
-			margin: 2px
-			border-radius: 4px
-			border: 1px solid #a1a1a1

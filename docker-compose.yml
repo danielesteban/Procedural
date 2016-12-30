@@ -1,0 +1,11 @@
+version: '2'
+services:
+  web:
+    build: .
+    image: procedural:dev
+    ports:
+     - "8080:8080"
+    volumes:
+     - ./app:/usr/src/Procedural/app:ro
+     - ./server.js:/usr/src/Procedural/server.js:ro
+     - ./webpack.config.js:/usr/src/Procedural/webpack.config.js:ro

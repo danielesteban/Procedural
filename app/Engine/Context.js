@@ -2,7 +2,7 @@ import {cE, aC, aE} from './DOM';
 import i18n from 'i18n';
 import createHistory from 'history/createBrowserHistory';
 import {saveAs} from 'file-saver';
-import {GIF} from 'gif.js';
+import GIF from 'gif.js';
 
 /* Setup global GL context */
 const hints = {
