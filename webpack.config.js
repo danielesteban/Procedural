@@ -12,14 +12,27 @@ const appPath = path.resolve(__dirname, 'app');
 const modulesPath = path.resolve(__dirname, 'node_modules');
 const outputPath = path.resolve(__dirname, 'dist');
 const publicPath = process.env.BASENAME || '/';
-const commitCount = (function() {
-	if(!fs.existsSync('.git')) return 0;
-	const childProcess = require('child_process');
-	try {
-		return parseInt(childProcess.execSync('git rev-list HEAD --count').toString(), 10);
-	} catch(e) {
-		return 0;
+const appVersion = (function() {
+	let version;
+	if(fs.existsSync('.git')) {
+		/* Get version from the repo commit count */
+		const childProcess = require('child_process');
+		let commitCount;
+		try {
+			commitCount = parseInt(childProcess.execSync('git rev-list HEAD --count').toString(), 10);
+		} catch(e) {
+			commitCount = 0;
+		}
+		version = '0.' + Math.floor(commitCount / 10) + '.' + (commitCount % 10);
+	} else {
+		/* Failover to package.json version */
+		try {
+			version = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'package.json'))).version;
+		} catch(e) {
+			version = '0.0.0';
+		}
 	}
+	return 'v' + version;
 })();
 const trackCount = (function() {
 	if(!fs.existsSync(path.join(appPath, 'Music'))) return 0;
@@ -113,7 +126,7 @@ module.exports = {
 				NODE_ENV: JSON.stringify(production ? "production" : "development")
 			},
 			BASENAME: JSON.stringify(publicPath.substr(0, publicPath.length - 1)),
-			VERSION: JSON.stringify('v0.' + Math.floor(commitCount / 10) + '.' + (commitCount % 10)),
+			VERSION: JSON.stringify(appVersion),
 			MUSIC_TRACKS: trackCount
 		}),
 		new ExtractTextPlugin(production ? '[hash].css' : 'app.css', {
