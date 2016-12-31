@@ -27,6 +27,7 @@ if(production) {
 	app.use(express.static(path.join(__dirname, 'dist'), {maxAge: 31536000000}));
 	app.get(publicPath + '*', index);
 } else {
+	console.log("Building dev bundle, this will take a minute...");
 	const webpack = require('webpack');
 	const webpackMiddleware = require('webpack-dev-middleware');
 	const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -34,7 +35,6 @@ if(production) {
 	const compiler = webpack(webpackConfig);
 	const middleware = webpackMiddleware(compiler, {
 		publicPath: webpackConfig.output.publicPath,
-		contentBase: 'app',
 		stats: {
 			colors: true,
 			hash: false,
