@@ -24,7 +24,7 @@ if(production) {
 		res.set('Cache-Control', 'no-cache').send(indexCache)
 	);
 	app.get(publicPath, index);
-	app.use(express.static(path.join(__dirname, 'dist'), {maxAge: 31536000000}));
+	app.use(publicPath, express.static(path.join(__dirname, 'dist'), {maxAge: 31536000000}));
 	app.get(publicPath + '*', index);
 } else {
 	console.log("Building dev bundle, this will take a minute...");
