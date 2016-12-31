@@ -13,6 +13,7 @@ const app = express();
 if(production) {
 	app.use(compression());
 	app.use(helmet());
+	app.set('trust proxy', 'loopback');
 }
 
 /* App server */
@@ -52,4 +53,4 @@ if(production) {
 }
 
 /* Bind the server */
-app.listen(process.env.PORT || 8080);
+app.listen(process.env.PORT || 8080, process.env.HOSTNAME);
