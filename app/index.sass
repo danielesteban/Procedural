@@ -38,17 +38,42 @@ canvas
 	height: 100%
 	cursor: pointer
 
-debug, settings
+debug, fork, settings
 	display: block
 	position: fixed
 	color: #fafafa
 	text-shadow: 1px 1px #1a1a1a
-	z-index: 1	
+	z-index: 1
 
 debug
 	top: 50px
 	right: 5px
 	text-align: right
+
+fork
+	top: 0
+	left: 0
+	a
+		display: block
+		width: 80px
+		height: 80px
+		cursor: pointer
+		&:hover .octo-arm
+			animation: octocat-wave 560ms ease-in-out
+	svg
+		fill: #000
+		color: #fff
+		border: 0
+		transform: scale(-1, 1)
+		pointer-events: none
+
+@keyframes octocat-wave
+	0%,100%
+		transform: rotate(0)
+	20%,60%
+		transform: rotate(-25deg)
+	40%,80%
+		transform: rotate(10deg)
 
 settings
 	bottom: 10px
