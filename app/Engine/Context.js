@@ -47,7 +47,7 @@ export const Screenshot = ({targetWidth, targetHeight, gif, frame, callback}) =>
 			gif.render();
 			Debug && Debug.updateExtra(i18n.encodingGIF);
 			return;
-	  } else {
+		} else {
 			takingScreenshot = false;
 			return {gif, frame};
 		}
